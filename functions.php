@@ -131,3 +131,28 @@ function paez_json_ld() {
 	<?php
 }
 add_action( 'wp_footer', 'paez_json_ld' );
+
+// Handle quote form submissions
+function paez_handle_quote() {
+	$name    = isset( $_POST['name'] )    ? sanitize_text_field( $_POST['name'] )    : '';
+	$phone   = isset( $_POST['phone'] )   ? sanitize_text_field( $_POST['phone'] )   : '';
+	$email   = isset( $_POST['email'] )   ? sanitize_email( $_POST['email'] )        : '';
+	$service = isset( $_POST['service'] ) ? sanitize_text_field( $_POST['service'] ) : '';
+
+	if ( empty( $name ) || empty( $phone ) ) {
+		wp_redirect( home_url( '/#quote' ) );
+		exit;
+	}
+
+	$to      = 'paeztreeservices@gmail.com';
+	$subject = 'New Quote Request — Paez Tree Service';
+	$message = "Name: $name\nPhone: $phone\nEmail: $email\nService: $service\n\nSubmitted via paeztreeservice.com";
+	$headers = array( 'Content-Type: text/plain; charset=UTF-8' );
+
+	wp_mail( $to, $subject, $message, $headers );
+
+	wp_redirect( home_url( '/?quote=sent#quote' ) );
+	exit;
+}
+add_action( 'admin_post_paez_quote', 'paez_handle_quote' );
+add_action( 'admin_post_nopriv_paez_quote', 'paez_handle_quote' );

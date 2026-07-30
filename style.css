@@ -229,7 +229,8 @@ body{background:#08301a;font-family:'Barlow',system-ui,sans-serif;color:var(--in
 .pz-loc{font-size:11px;letter-spacing:.32em;color:var(--tan);text-transform:uppercase;font-weight:600;border-left:1px solid rgba(255,255,255,.16);padding-left:16px;line-height:1.55}
 
 /* ---- mobile menu ---- */
-.pz-mm{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,26,15,.94);z-index:200;display:none;flex-direction:column;padding:28px 24px 36px;overflow-y:auto}
+.pz-mm{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(8,26,15,.94);z-index:200;display:none;flex-direction:column;padding:28px 24px 36px;overflow-y:auto;opacity:0;transition:opacity .3s ease}
+.pz-mm.pz-mm-open{display:flex;opacity:1}
 .pz-mm-a{color:#e7ece4;text-decoration:none;font-weight:600;font-size:17px;padding:15px 4px;border-bottom:1px solid rgba(255,255,255,.08)}
 .pz-mm-phone{color:#fff;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:23px;padding:15px 4px;display:flex;align-items:center;gap:10px}
 .pz-mm-cta{margin-top:12px;background:var(--accent);color:#fff;text-align:center;text-decoration:none;font-weight:700;font-family:'Barlow Semi Condensed',sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:16px;padding:15px;border-radius:4px}

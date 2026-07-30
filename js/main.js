@@ -7,13 +7,17 @@
   var mobileMenu = document.getElementById('pzMobileMenu');
   if (burger && mobileMenu) {
     burger.addEventListener('click', function () {
-      var open = mobileMenu.style.display === 'flex';
-      mobileMenu.style.display = open ? 'none' : 'flex';
+      var open = mobileMenu.classList.contains('pz-mm-open');
+      if (open) {
+        mobileMenu.classList.remove('pz-mm-open');
+      } else {
+        mobileMenu.classList.add('pz-mm-open');
+      }
       burger.setAttribute('aria-expanded', String(!open));
     });
     mobileMenu.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
-        mobileMenu.style.display = 'none';
+        mobileMenu.classList.remove('pz-mm-open');
         burger.setAttribute('aria-expanded', 'false');
       });
     });
