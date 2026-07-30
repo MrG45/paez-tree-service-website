@@ -1,0 +1,119 @@
+/*
+Theme Name: Paez Tree Service
+Theme URI: https://www.paeztreeservice.com
+Author: Paez Tree Service
+Description: Custom one-page theme for Paez Tree Service — tree trimming, removal, stumps and palms across Anaheim & Orange County. Licensed CA #1089610.
+Version: 1.0.0
+Requires at least: 5.9
+Tested up to: 6.6
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: paez-tree-service
+*/
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#08301a}
+::selection{background:#9c5a26;color:#fff}
+
+a.pz-plain{text-decoration:none}
+
+@keyframes paezRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes paezPulse{0%,100%{box-shadow:0 0 0 0 rgba(35,166,87,.5)}50%{box-shadow:0 0 0 8px rgba(35,166,87,0)}}
+@keyframes paezSiren{0%,100%{box-shadow:0 0 0 0 rgba(232,161,58,.6)}50%{box-shadow:0 0 0 9px rgba(232,161,58,0)}}
+@keyframes paezFade{from{opacity:0}to{opacity:1}}
+@keyframes paezZoom{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+
+/* ---- hover / focus states ---- */
+.h-bright:hover{filter:brightness(1.08)}
+.h-bright-up:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.h-bright-up2:hover{filter:brightness(1.06);transform:translateY(-2px)}
+.h-ghost:hover{background:rgba(255,255,255,.1)}
+.h-invert:hover{background:#fff!important;color:#0a3a1f!important}
+.h-cream:hover{background:#efe9da}
+.h-lift:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(15,26,19,.16)!important}
+.pz-nav-a:hover{color:#fff!important;border-bottom-color:#caa56e!important}
+.pz-util-a:hover{color:#fff!important}
+.pz-headphone:hover{background:rgba(35,166,87,.16)!important;border-color:rgba(35,166,87,.8)!important}
+.pz-promo-a:hover{border-bottom-color:#fff!important}
+.pz-card{transition:transform .2s,box-shadow .2s}
+.pz-card:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(15,26,19,.16)}
+.pz-card-img{transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.pz-card:hover .pz-card-img{transform:scale(1.07)}
+.pz-gitem img{transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.pz-gitem:hover img{transform:scale(1.06)}
+.pz-gmag{opacity:0;transition:opacity .25s ease}
+.pz-gitem:hover .pz-gmag{opacity:1}
+.pz-arrow:hover{background:#0a3a1f!important;color:#fff!important;border-color:#0a3a1f!important}
+.pz-rcard{transition:transform .25s ease,box-shadow .25s ease}
+.pz-rcard:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(15,26,19,.14)!important}
+.pz-in:focus{border-color:#9c5a26!important;outline:none}
+.pz-fa:hover{color:#caa56e!important}
+.pz-lb-x:hover{background:#e2dccc!important}
+.pz-foot-yelp:hover{text-decoration:underline!important}
+
+/* ---- scroll reveal ---- */
+.rv{opacity:0;transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv-rise{transform:translateY(26px)}
+.rv.rv-in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* ---- responsive ---- */
+@media (max-width:1100px){
+  .pz-loc{display:none!important}
+}
+@media (max-width:900px){
+  .pz-desk-nav{display:none!important}
+  .pz-headcta{display:none!important}
+  .pz-burger{display:flex!important}
+  .pz-gallery{grid-template-columns:repeat(2,1fr)!important}
+}
+@media (max-width:1024px){
+  .pz-grid3{grid-template-columns:repeat(2,1fr)!important}
+}
+@media (max-width:980px){
+  .pz-trust{grid-template-columns:repeat(2,1fr)!important}
+}
+@media (max-width:940px){
+  .pz-hero-inner{flex-direction:column!important;align-items:flex-start!important;gap:34px!important}
+  .pz-quote{width:100%!important;max-width:520px!important}
+}
+@media (max-width:760px){
+  .pz-util{display:none!important}
+  .pz-hdr-inner{padding-top:12px!important;padding-bottom:12px!important}
+  .pz-logo{height:54px!important}
+  .pz-hero-inner{flex-direction:column!important;align-items:flex-start!important;gap:28px!important;padding-top:40px!important;padding-bottom:48px!important}
+  .pz-quote{width:100%!important;max-width:none!important}
+  .pz-h1{font-size:44px!important}
+  .pz-emg .pz-h2{font-size:38px!important}
+  .pz-emg-points{gap:12px!important}
+  .pz-h2{font-size:32px!important}
+  .pz-grid3{grid-template-columns:1fr!important}
+  .pz-foot{grid-template-columns:1fr!important;gap:30px!important}
+  .pz-contact-wrap{min-height:0!important;display:flex!important;flex-direction:column!important;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(6,26,15,.35)}
+  .pz-contact-card{position:static!important;width:auto!important;top:auto!important;left:auto!important;order:1;margin-bottom:0!important;border-radius:16px 16px 0 0!important;box-shadow:none!important}
+  .pz-contact-card > div{padding-left:22px!important;padding-right:22px!important}
+  .pz-contact-card a[href^="tel"]{font-size:36px!important}
+  .pz-map-panel{position:static!important;order:2;height:280px!important;border-radius:0 0 16px 16px!important;box-shadow:none!important;border:none!important}
+  .pz-sec{padding-top:52px!important;padding-bottom:48px!important;padding-left:20px!important;padding-right:20px!important}
+  .pz-ba{height:300px!important}
+  .pz-ownerbadge{position:static!important;margin:14px 0 0 0!important;max-width:none!important}
+  .pz-aboutimg{height:300px!important}
+}
+@media (max-width:560px){
+  .pz-gallery{grid-template-columns:1fr!important}
+  .pz-lb-menu{display:none!important}
+  .pz-lb{height:92vh!important}
+  .pz-lb-count{display:none!important}
+  .pz-hero-cta{flex-direction:column!important;align-items:stretch!important}
+  .pz-hero-cta a{text-align:center!important}
+  .pz-cta-btns{flex-direction:column!important}
+  .pz-cta-btns a{text-align:center!important}
+}
+@media (max-width:460px){
+  .pz-h1{font-size:36px!important}
+  .pz-trust{grid-template-columns:1fr!important}
+  .pz-abullets{grid-template-columns:1fr!important}
+  .pz-promo > div{font-size:12px!important;letter-spacing:.02em!important}
+}
