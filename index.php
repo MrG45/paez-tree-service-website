@@ -12,6 +12,9 @@ $tpl = esc_url( get_template_directory_uri() );
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700&display=swap"></noscript>
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> style="--forest:#0a3a1f; --pine:#124a28; --moss:#0f5c2f; --leaf:#23a657; --bark:#4f2a0f; --tan:#caa56e; --cream:#efe9da; --paper:#f5f2ea; --ink:#1b2620; --muted:#5f6b60; --line:#e2dccc; --yelp:#d32323; --accent:#9c5a26; font-family:'Barlow',system-ui,sans-serif; color:var(--ink); background:var(--paper); line-height:1.55; overflow-x:hidden">
@@ -46,7 +49,7 @@ $tpl = esc_url( get_template_directory_uri() );
 <header style="position:sticky; top:0; z-index:50; background:linear-gradient(180deg,#10401f,#0b2e18); border-top:3px solid var(--leaf); box-shadow:0 8px 26px rgba(0,0,0,.3)">
   <div class="pz-hdr-inner" style="max-width:1180px; margin:0 auto; padding:11px 24px; display:flex; align-items:center; justify-content:space-between; gap:20px">
     <a href="<?php echo esc_url( home_url( '/' ) ); ?>" style="display:flex; align-items:center; gap:16px; text-decoration:none">
-      <img class="pz-logo" src="https://www.paeztreeservice.com/wp-content/uploads/2025/06/Paez-Tree-Service-Logo-2-1.gif" alt="Paez Tree Service" style="height:84px; width:auto; display:block">
+      <img class="pz-logo" src="https://www.paeztreeservice.com/wp-content/uploads/2025/06/Paez-Tree-Service-Logo-2-1.gif" alt="Paez Tree Service" fetchpriority="high" style="height:84px; width:auto; display:block">
       <span class="pz-loc" style="font-size:11px; letter-spacing:.32em; color:var(--tan); text-transform:uppercase; font-weight:600; border-left:1px solid rgba(255,255,255,.16); padding-left:16px; line-height:1.55">Anaheim<br>Orange County</span>
     </a>
     <div style="display:flex; align-items:center; gap:24px">
