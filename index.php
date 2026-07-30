@@ -113,7 +113,7 @@ $tpl = esc_url( get_template_directory_uri() );
       <div class="pz-quote-rating"><span style="width:24px; height:24px; border-radius:50%; background:var(--leaf); color:#08301a; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex:none">&#9733;</span> 5.0 &middot; Same-day quotes &middot; Honest pricing &middot; No hidden fees</div>
       <h2 class="pz-quote-h2">Get a Free Estimate</h2>
       <p class="pz-quote-p">No obligation. We respond fast.</p>
-      <form id="pzQuoteForm" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+      <form id="pzQuoteForm" action="https://n8n.srv1351927.hstgr.cloud/webhook/paez-quote" method="post">
         <input type="hidden" name="action" value="paez_quote">
         <div class="pz-quote-label">What do you need?</div>
         <label class="pz-quote-opt" style="color:#cdd5c9"><input type="radio" name="service" value="Tree Trimming" checked><span>Tree Trimming</span></label>
