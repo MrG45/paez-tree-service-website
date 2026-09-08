@@ -16,10 +16,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 <script>window.PZ_TPL_URI = '';</script>
-<style>
+<style is:global>
   html { scroll-behavior: smooth; }
   [id] { scroll-margin-top: 84px; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  /* Mobile: promo strip reads as a big brown block when it wraps — restyle to deep green to match the header */
+  @media (max-width: 760px) {
+    .pz-promo {
+      background: linear-gradient(90deg, var(--pine), var(--forest)) !important;
+      padding: 7px 12px !important;
+    }
+    .pz-promo > div { gap: 8px !important; font-size: 12px !important; }
+    .pz-promo-a { font-size: 12px; }
+  }
 </style>
 <script defer src="/js/main.js"></script>
 </head>
