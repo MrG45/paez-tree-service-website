@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Paez Tree Service — Tree work done safe, clean & fast">
   <meta property="og:description" content="Free estimates across Anaheim & Orange County. 24/7 emergency tree service. Fully insured. CA License #1089610.">
-  <meta property="og:image" content="/assets/site/hero-bg.jpg">
+  <meta property="og:image" content="/assets/site/hero-climber.webp">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
@@ -23,6 +23,11 @@
 
   /* Mobile: promo strip reads as a big brown block when it wraps — restyle to deep green to match the header */
   @media (max-width: 760px) {
+    /* Mobile: climber photo can't coexist with stacked text — swap to clean dark gradient */
+    .pz-hero {
+      background-image: linear-gradient(160deg, rgba(11,37,22,.35) 0%, rgba(11,37,22,0) 55%), radial-gradient(120% 90% at 85% 100%, rgba(15,92,47,.28) 0%, rgba(5,18,11,0) 60%), linear-gradient(180deg, #0d2f1a 0%, #0a2514 100%) !important;
+      background-size: cover, cover, cover !important;
+    }
     .pz-promo {
       background: linear-gradient(90deg, var(--pine), var(--forest)) !important;
       padding: 7px 12px !important;
@@ -102,7 +107,7 @@
 </header>
 
 <!-- HERO -->
-<section style="position:relative; background-image:linear-gradient(90deg, rgba(11,37,22,.92) 0%, rgba(11,37,22,.62) 30%, rgba(11,37,22,.16) 55%, rgba(11,37,22,0) 72%), linear-gradient(180deg, rgba(11,37,22,.92) 0%, rgba(11,37,22,0) 28%), radial-gradient(140% 120% at 62% 42%, rgba(5,18,11,0) 55%, rgba(5,18,11,.62) 100%), url('/assets/site/about-extra.jpg'); background-size:cover; background-position:center">
+<section class="pz-hero" style="position:relative; background-color:#0b2516; background-image:linear-gradient(90deg, rgba(11,37,22,.96) 0%, rgba(11,37,22,.88) 26%, rgba(11,37,22,.55) 44%, rgba(11,37,22,.14) 60%, rgba(11,37,22,0) 72%), linear-gradient(180deg, rgba(11,37,22,.9) 0%, rgba(11,37,22,0) 24%), linear-gradient(0deg, rgba(11,37,22,.85) 0%, rgba(11,37,22,0) 30%), radial-gradient(140% 120% at 62% 42%, rgba(5,18,11,0) 55%, rgba(5,18,11,.55) 100%), url('/assets/site/hero-climber.webp'); background-size:cover, cover, cover, cover, auto 96%; background-position:center, center, center, center, right 8% center; background-repeat:no-repeat">
   <div class="pz-hero-inner" style="max-width:1180px; margin:0 auto; padding:84px 24px 92px; display:flex; flex-wrap:wrap; gap:40px; align-items:center; justify-content:space-between">
     <div style="flex:1 1 400px; min-width:0; max-width:640px; animation:paezRise .6s ease both">
       <div style="display:inline-flex; align-items:center; gap:10px; background:rgba(111,148,96,.16); border:1px solid rgba(111,148,96,.4); color:var(--leaf); padding:8px 16px 8px 8px; border-radius:40px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; font-size:12.5px; margin-bottom:24px">
