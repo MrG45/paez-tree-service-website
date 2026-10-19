@@ -1,0 +1,45 @@
+---
+import { translate, type Locale } from '../i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = (text: string) => translate(locale, text);
+const items = [
+  { title: 'Licensed', detail: 'CA #1089610', icon: 'license' },
+  { title: 'Insured & Bonded', detail: "Workers' comp covered", icon: 'shield' },
+  { title: '24/7 Emergency', detail: 'Storm & hazard response', icon: 'clock' },
+  { title: 'Customer Reviews', detail: 'Loved on', icon: 'star', yelp: true },
+];
+---
+
+<div class="pz-trust-band">
+  <ul class="pz-trust" role="list">
+    {items.map((item, index) => (
+      <li class="pz-trust-item">
+        <span class="pz-trust-medallion" aria-hidden="true">
+          <svg class="pz-trust-icon" data-trust-icon={item.icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+            {item.icon === 'license' && <>
+              <path d="m8.2 13.6-1.2 7.4 5-2.5 5 2.5-1.2-7.4" />
+              <circle cx="12" cy="9" r="6" />
+              <path d="m9.5 9 1.7 1.7 3.3-3.3" />
+            </>}
+            {item.icon === 'shield' && <>
+              <path d="m12 3-8 3v6c0 4.5 4 7.5 8 9 4-1.5 8-4.5 8-9V6l-8-3Z" />
+              <path d="m8 12 2.5 2.5 5-5" />
+            </>}
+            {item.icon === 'clock' && <>
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5h5" />
+            </>}
+            {item.icon === 'star' && <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />}
+          </svg>
+          <span class="pz-trust-number">{index + 1}</span>
+        </span>
+        <div class="pz-trust-label">
+          <strong>{t(item.title)}</strong>
+          <span class="pz-trust-detail">{t(item.detail)}{item.yelp && <img src="/assets/optimized/yelp-logo-white-192.webp" alt="Yelp" width="40" height="20" />}</span>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>

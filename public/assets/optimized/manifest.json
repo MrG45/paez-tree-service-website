@@ -1,0 +1,834 @@
+{
+  "encoder": "sharp 0.35.4",
+  "images": [
+    {
+      "source": "/assets/generated/paez-trimming-v2.png",
+      "width": 1672,
+      "height": 941,
+      "originalBytes": 3288619,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/generated/paez-trimming-v2-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 51666
+        },
+        {
+          "src": "/assets/optimized/generated/paez-trimming-v2-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 81314
+        },
+        {
+          "src": "/assets/optimized/generated/paez-trimming-v2-960.avif",
+          "width": 960,
+          "height": 540,
+          "format": "avif",
+          "bytes": 98006
+        },
+        {
+          "src": "/assets/optimized/generated/paez-trimming-v2-960.webp",
+          "width": 960,
+          "height": 540,
+          "format": "webp",
+          "bytes": 152652
+        }
+      ]
+    },
+    {
+      "source": "/assets/generated/paez-removal-v3.png",
+      "width": 1672,
+      "height": 941,
+      "originalBytes": 3024204,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/generated/paez-removal-v3-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 45827
+        },
+        {
+          "src": "/assets/optimized/generated/paez-removal-v3-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 72220
+        },
+        {
+          "src": "/assets/optimized/generated/paez-removal-v3-960.avif",
+          "width": 960,
+          "height": 540,
+          "format": "avif",
+          "bytes": 86123
+        },
+        {
+          "src": "/assets/optimized/generated/paez-removal-v3-960.webp",
+          "width": 960,
+          "height": 540,
+          "format": "webp",
+          "bytes": 134644
+        }
+      ]
+    },
+    {
+      "source": "/assets/generated/paez-stump-v3.png",
+      "width": 1672,
+      "height": 941,
+      "originalBytes": 2857790,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/generated/paez-stump-v3-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 39808
+        },
+        {
+          "src": "/assets/optimized/generated/paez-stump-v3-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 64044
+        },
+        {
+          "src": "/assets/optimized/generated/paez-stump-v3-960.avif",
+          "width": 960,
+          "height": 540,
+          "format": "avif",
+          "bytes": 74340
+        },
+        {
+          "src": "/assets/optimized/generated/paez-stump-v3-960.webp",
+          "width": 960,
+          "height": 540,
+          "format": "webp",
+          "bytes": 119308
+        }
+      ]
+    },
+    {
+      "source": "/assets/generated/paez-palm-v2.png",
+      "width": 1728,
+      "height": 910,
+      "originalBytes": 3224543,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/generated/paez-palm-v2-640.avif",
+          "width": 640,
+          "height": 337,
+          "format": "avif",
+          "bytes": 46192
+        },
+        {
+          "src": "/assets/optimized/generated/paez-palm-v2-640.webp",
+          "width": 640,
+          "height": 337,
+          "format": "webp",
+          "bytes": 73984
+        },
+        {
+          "src": "/assets/optimized/generated/paez-palm-v2-960.avif",
+          "width": 960,
+          "height": 506,
+          "format": "avif",
+          "bytes": 86805
+        },
+        {
+          "src": "/assets/optimized/generated/paez-palm-v2-960.webp",
+          "width": 960,
+          "height": 506,
+          "format": "webp",
+          "bytes": 141088
+        }
+      ]
+    },
+    {
+      "source": "/assets/generated/paez-hoa-v2.png",
+      "width": 1724,
+      "height": 912,
+      "originalBytes": 2852000,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/generated/paez-hoa-v2-640.avif",
+          "width": 640,
+          "height": 339,
+          "format": "avif",
+          "bytes": 40713
+        },
+        {
+          "src": "/assets/optimized/generated/paez-hoa-v2-640.webp",
+          "width": 640,
+          "height": 339,
+          "format": "webp",
+          "bytes": 62262
+        },
+        {
+          "src": "/assets/optimized/generated/paez-hoa-v2-960.avif",
+          "width": 960,
+          "height": 508,
+          "format": "avif",
+          "bytes": 73988
+        },
+        {
+          "src": "/assets/optimized/generated/paez-hoa-v2-960.webp",
+          "width": 960,
+          "height": 508,
+          "format": "webp",
+          "bytes": 113746
+        }
+      ]
+    },
+    {
+      "source": "/assets/generated/paez-commercial-v3.png",
+      "width": 1672,
+      "height": 941,
+      "originalBytes": 2891545,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/generated/paez-commercial-v3-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 42519
+        },
+        {
+          "src": "/assets/optimized/generated/paez-commercial-v3-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 66238
+        },
+        {
+          "src": "/assets/optimized/generated/paez-commercial-v3-960.avif",
+          "width": 960,
+          "height": 540,
+          "format": "avif",
+          "bytes": 80441
+        },
+        {
+          "src": "/assets/optimized/generated/paez-commercial-v3-960.webp",
+          "width": 960,
+          "height": 540,
+          "format": "webp",
+          "bytes": 124220
+        }
+      ]
+    },
+    {
+      "source": "/assets/generated/paez-team-v2.png",
+      "width": 1448,
+      "height": 1086,
+      "originalBytes": 3124888,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/generated/paez-team-v2-640.avif",
+          "width": 640,
+          "height": 480,
+          "format": "avif",
+          "bytes": 52337
+        },
+        {
+          "src": "/assets/optimized/generated/paez-team-v2-640.webp",
+          "width": 640,
+          "height": 480,
+          "format": "webp",
+          "bytes": 83300
+        },
+        {
+          "src": "/assets/optimized/generated/paez-team-v2-1040.avif",
+          "width": 1040,
+          "height": 780,
+          "format": "avif",
+          "bytes": 108013
+        },
+        {
+          "src": "/assets/optimized/generated/paez-team-v2-1040.webp",
+          "width": 1040,
+          "height": 780,
+          "format": "webp",
+          "bytes": 174266
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/hero-climber.webp",
+      "width": 2048,
+      "height": 1360,
+      "originalBytes": 605392,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/hero-climber-800.avif",
+          "width": 800,
+          "height": 531,
+          "format": "avif",
+          "bytes": 59455
+        },
+        {
+          "src": "/assets/optimized/site/hero-climber-800.webp",
+          "width": 800,
+          "height": 531,
+          "format": "webp",
+          "bytes": 93370
+        },
+        {
+          "src": "/assets/optimized/site/hero-climber-1280.avif",
+          "width": 1280,
+          "height": 850,
+          "format": "avif",
+          "bytes": 124394
+        },
+        {
+          "src": "/assets/optimized/site/hero-climber-1280.webp",
+          "width": 1280,
+          "height": 850,
+          "format": "webp",
+          "bytes": 194714
+        },
+        {
+          "src": "/assets/optimized/site/hero-climber-1600.avif",
+          "width": 1600,
+          "height": 1062,
+          "format": "avif",
+          "bytes": 172759
+        },
+        {
+          "src": "/assets/optimized/site/hero-climber-1600.webp",
+          "width": 1600,
+          "height": 1062,
+          "format": "webp",
+          "bytes": 263640
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/svc-trimming.webp",
+      "width": 2560,
+      "height": 1424,
+      "originalBytes": 623020,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/svc-trimming-640.avif",
+          "width": 640,
+          "height": 356,
+          "format": "avif",
+          "bytes": 39444
+        },
+        {
+          "src": "/assets/optimized/site/svc-trimming-640.webp",
+          "width": 640,
+          "height": 356,
+          "format": "webp",
+          "bytes": 56374
+        },
+        {
+          "src": "/assets/optimized/site/svc-trimming-960.avif",
+          "width": 960,
+          "height": 534,
+          "format": "avif",
+          "bytes": 80925
+        },
+        {
+          "src": "/assets/optimized/site/svc-trimming-960.webp",
+          "width": 960,
+          "height": 534,
+          "format": "webp",
+          "bytes": 118344
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/hero-bg.jpg",
+      "width": 1600,
+      "height": 1137,
+      "originalBytes": 619145,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/hero-bg-640.avif",
+          "width": 640,
+          "height": 455,
+          "format": "avif",
+          "bytes": 53192
+        },
+        {
+          "src": "/assets/optimized/site/hero-bg-640.webp",
+          "width": 640,
+          "height": 455,
+          "format": "webp",
+          "bytes": 88464
+        },
+        {
+          "src": "/assets/optimized/site/hero-bg-960.avif",
+          "width": 960,
+          "height": 682,
+          "format": "avif",
+          "bytes": 111901
+        },
+        {
+          "src": "/assets/optimized/site/hero-bg-960.webp",
+          "width": 960,
+          "height": 682,
+          "format": "webp",
+          "bytes": 183954
+        },
+        {
+          "src": "/assets/optimized/site/hero-bg-1600.avif",
+          "width": 1600,
+          "height": 1137,
+          "format": "avif",
+          "bytes": 278660
+        },
+        {
+          "src": "/assets/optimized/site/hero-bg-1600.webp",
+          "width": 1600,
+          "height": 1137,
+          "format": "webp",
+          "bytes": 441086
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/svc-stump.webp",
+      "width": 2560,
+      "height": 1440,
+      "originalBytes": 613716,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/svc-stump-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 42717
+        },
+        {
+          "src": "/assets/optimized/site/svc-stump-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 65890
+        },
+        {
+          "src": "/assets/optimized/site/svc-stump-960.avif",
+          "width": 960,
+          "height": 540,
+          "format": "avif",
+          "bytes": 89189
+        },
+        {
+          "src": "/assets/optimized/site/svc-stump-960.webp",
+          "width": 960,
+          "height": 540,
+          "format": "webp",
+          "bytes": 138424
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/svc-palm.webp",
+      "width": 2354,
+      "height": 1325,
+      "originalBytes": 215036,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/svc-palm-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 18598
+        },
+        {
+          "src": "/assets/optimized/site/svc-palm-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 24026
+        },
+        {
+          "src": "/assets/optimized/site/svc-palm-960.avif",
+          "width": 960,
+          "height": 540,
+          "format": "avif",
+          "bytes": 36963
+        },
+        {
+          "src": "/assets/optimized/site/svc-palm-960.webp",
+          "width": 960,
+          "height": 540,
+          "format": "webp",
+          "bytes": 49918
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/svc-hoa.webp",
+      "width": 563,
+      "height": 340,
+      "originalBytes": 68078,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/svc-hoa-563.avif",
+          "width": 563,
+          "height": 340,
+          "format": "avif",
+          "bytes": 37580
+        },
+        {
+          "src": "/assets/optimized/site/svc-hoa-563.webp",
+          "width": 563,
+          "height": 340,
+          "format": "webp",
+          "bytes": 60230
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/svc-commercial.webp",
+      "width": 2560,
+      "height": 1439,
+      "originalBytes": 293538,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/svc-commercial-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 31906
+        },
+        {
+          "src": "/assets/optimized/site/svc-commercial-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 50418
+        },
+        {
+          "src": "/assets/optimized/site/svc-commercial-960.avif",
+          "width": 960,
+          "height": 540,
+          "format": "avif",
+          "bytes": 62693
+        },
+        {
+          "src": "/assets/optimized/site/svc-commercial-960.webp",
+          "width": 960,
+          "height": 540,
+          "format": "webp",
+          "bytes": 94882
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/svc-removal.jpg",
+      "width": 750,
+      "height": 1000,
+      "originalBytes": 199633,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/svc-removal-640.avif",
+          "width": 640,
+          "height": 853,
+          "format": "avif",
+          "bytes": 66078
+        },
+        {
+          "src": "/assets/optimized/site/svc-removal-640.webp",
+          "width": 640,
+          "height": 853,
+          "format": "webp",
+          "bytes": 102142
+        },
+        {
+          "src": "/assets/optimized/site/svc-removal-750.avif",
+          "width": 750,
+          "height": 1000,
+          "format": "avif",
+          "bytes": 92261
+        },
+        {
+          "src": "/assets/optimized/site/svc-removal-750.webp",
+          "width": 750,
+          "height": 1000,
+          "format": "webp",
+          "bytes": 142022
+        }
+      ]
+    },
+    {
+      "source": "/assets/site/logo.gif",
+      "width": 1000,
+      "height": 697,
+      "originalBytes": 65061,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/site/logo-280.webp",
+          "width": 280,
+          "height": 195,
+          "format": "webp",
+          "bytes": 45790
+        }
+      ]
+    },
+    {
+      "source": "/assets/yelp-logo.png",
+      "width": 2660,
+      "height": 1065,
+      "originalBytes": 125062,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/yelp-logo-192.webp",
+          "width": 192,
+          "height": 77,
+          "format": "webp",
+          "bytes": 4158
+        }
+      ]
+    },
+    {
+      "source": "/assets/yelp-logo-white.png",
+      "width": 2660,
+      "height": 1065,
+      "originalBytes": 128305,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/yelp-logo-white-192.webp",
+          "width": 192,
+          "height": 77,
+          "format": "webp",
+          "bytes": 4206
+        }
+      ]
+    },
+    {
+      "source": "/assets/before-after/ba-02-backyard-large-tree-removal-before.jpg",
+      "width": 1000,
+      "height": 563,
+      "originalBytes": 145545,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-before-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 33682
+        },
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-before-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 55054
+        },
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-before-1000.avif",
+          "width": 1000,
+          "height": 563,
+          "format": "avif",
+          "bytes": 72739
+        },
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-before-1000.webp",
+          "width": 1000,
+          "height": 563,
+          "format": "webp",
+          "bytes": 112018
+        }
+      ]
+    },
+    {
+      "source": "/assets/before-after/ba-02-backyard-large-tree-removal-after.jpg",
+      "width": 1000,
+      "height": 563,
+      "originalBytes": 128294,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-after-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 28130
+        },
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-after-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 45810
+        },
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-after-1000.avif",
+          "width": 1000,
+          "height": 563,
+          "format": "avif",
+          "bytes": 59135
+        },
+        {
+          "src": "/assets/optimized/before-after/ba-02-backyard-large-tree-removal-after-1000.webp",
+          "width": 1000,
+          "height": 563,
+          "format": "webp",
+          "bytes": 89300
+        }
+      ]
+    },
+    {
+      "source": "/assets/gallery/paez-01-climber-cutting-trunk.jpg",
+      "width": 1000,
+      "height": 563,
+      "originalBytes": 136577,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/gallery/paez-01-climber-cutting-trunk-640.avif",
+          "width": 640,
+          "height": 360,
+          "format": "avif",
+          "bytes": 32883
+        },
+        {
+          "src": "/assets/optimized/gallery/paez-01-climber-cutting-trunk-640.webp",
+          "width": 640,
+          "height": 360,
+          "format": "webp",
+          "bytes": 48054
+        }
+      ]
+    },
+    {
+      "source": "/assets/gallery/paez-02-crane-palm-removal-apartment.jpg",
+      "width": 750,
+      "height": 1000,
+      "originalBytes": 168353,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/gallery/paez-02-crane-palm-removal-apartment-640.avif",
+          "width": 640,
+          "height": 853,
+          "format": "avif",
+          "bytes": 61727
+        },
+        {
+          "src": "/assets/optimized/gallery/paez-02-crane-palm-removal-apartment-640.webp",
+          "width": 640,
+          "height": 853,
+          "format": "webp",
+          "bytes": 92898
+        }
+      ]
+    },
+    {
+      "source": "/assets/gallery/paez-03-stump-grinder-operator.jpg",
+      "width": 750,
+      "height": 1000,
+      "originalBytes": 205743,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/gallery/paez-03-stump-grinder-operator-640.avif",
+          "width": 640,
+          "height": 853,
+          "format": "avif",
+          "bytes": 77783
+        },
+        {
+          "src": "/assets/optimized/gallery/paez-03-stump-grinder-operator-640.webp",
+          "width": 640,
+          "height": 853,
+          "format": "webp",
+          "bytes": 122462
+        }
+      ]
+    },
+    {
+      "source": "/assets/gallery/paez-05-large-tree-removal-over-pool.jpg",
+      "width": 1000,
+      "height": 750,
+      "originalBytes": 224857,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/gallery/paez-05-large-tree-removal-over-pool-640.avif",
+          "width": 640,
+          "height": 480,
+          "format": "avif",
+          "bytes": 52777
+        },
+        {
+          "src": "/assets/optimized/gallery/paez-05-large-tree-removal-over-pool-640.webp",
+          "width": 640,
+          "height": 480,
+          "format": "webp",
+          "bytes": 80690
+        }
+      ]
+    },
+    {
+      "source": "/assets/gallery/paez-06-trimmed-trees-modern-building.jpg",
+      "width": 1000,
+      "height": 750,
+      "originalBytes": 177226,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/gallery/paez-06-trimmed-trees-modern-building-640.avif",
+          "width": 640,
+          "height": 480,
+          "format": "avif",
+          "bytes": 42573
+        },
+        {
+          "src": "/assets/optimized/gallery/paez-06-trimmed-trees-modern-building-640.webp",
+          "width": 640,
+          "height": 480,
+          "format": "webp",
+          "bytes": 65820
+        }
+      ]
+    },
+    {
+      "source": "/assets/gallery/paez-07-bucket-truck-and-chipper-on-site.jpg",
+      "width": 750,
+      "height": 1000,
+      "originalBytes": 176517,
+      "frames": 1,
+      "variants": [
+        {
+          "src": "/assets/optimized/gallery/paez-07-bucket-truck-and-chipper-on-site-640.avif",
+          "width": 640,
+          "height": 853,
+          "format": "avif",
+          "bytes": 64425
+        },
+        {
+          "src": "/assets/optimized/gallery/paez-07-bucket-truck-and-chipper-on-site-640.webp",
+          "width": 640,
+          "height": 853,
+          "format": "webp",
+          "bytes": 94292
+        }
+      ]
+    }
+  ]
+}

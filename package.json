@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "images:optimize": "node scripts/optimize-images.mjs",
+    "test": "npm run build && node --test tests/*.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -16,5 +18,9 @@
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "happy-dom": "^21.0.3",
+    "sharp": "^0.35.4"
   }
 }

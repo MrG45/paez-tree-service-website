@@ -1,0 +1,983 @@
+{
+  "workflowId": "2EiOESirvx7fpD1s",
+  "dataTableId": "waEFubSJS5mzKuAs",
+  "paezNotificationsEnabled": false,
+  "versionId": "a8178481-0458-4f61-bda2-4042ede3276b",
+  "nodes": [
+    {
+      "id": "f310993b-ede1-41e4-8fa4-bde518770215",
+      "name": "Quote Received",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "paez-quote",
+        "authentication": "none",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "ignoreBots": true
+        }
+      },
+      "webhookId": "4542e14d-f577-49b6-9052-418aa9af51a5"
+    },
+    {
+      "id": "638fdec0-cba6-4bcb-99a0-eddb15085a5d",
+      "name": "Validate Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// n8n Code node: validate the public form and minimize stored request metadata.\nconst input = $input.first().json;\nconst body = input.body && typeof input.body === 'object' ? input.body : {};\nconst text = (key, max = 200) => typeof body[key] === 'string' ? body[key].trim().slice(0, max) : '';\nconst services = ['Tree Trimming', 'Tree Removal', 'Stump Removal', 'Palm Tree Service', 'HOA / Commercial', 'Emergency — call me ASAP'];\nconst name = text('name', 100), phone = text('phone', 40), service = text('service', 80);\nconst email = text('email', 254), postal_code = text('postal_code', 10);\n// Version 2 requires a complete service address. Older deployed forms remain\n// accepted during rollout; never turn their ZIP alone into a property map.\nconst form_version = text('form_version', 10);\nconst street_address = text('street_address', 161), address_line2 = text('address_line2', 81);\nconst city = text('city', 101), state = text('state', 3).toUpperCase();\nconst addressRequired = form_version === '2' || Boolean(street_address || address_line2 || city || state);\nconst requestedId = text('lead_id', 80), modern = Boolean(requestedId);\nconst errors = [];\nconst tree_count = text('tree_count', 40);\nconst requestedHeight = text('tree_height', 40);\nconst tree_height = service === 'Stump Removal' ? '' : requestedHeight;\nconst discount_code = text('discount_code', 33).toUpperCase();\nif (!['', 'Not sure', '1', '2–3', '4–6', '7+'].includes(tree_count)) errors.push('tree_count');\nif (!['', 'Not sure', 'Under 15 ft', '15–30 ft', '30–50 ft', 'Over 50 ft'].includes(tree_height)) errors.push('tree_height');\nif (discount_code && !/^[A-Z0-9_-]{1,32}$/.test(discount_code)) errors.push('discount_code');\nif (text('website', 500)) errors.push('invalid_request');\nif (name.length < 2 || /[\\r\\n]/.test(name)) errors.push('name');\nconst digits = phone.replace(/\\D/g, '');\nif (!/^\\+?[\\d\\s().-]+$/.test(phone) || digits.length < 10 || digits.length > 15 || /^(\\d)\\1+$/.test(digits)) errors.push('phone');\nif (!services.includes(service)) errors.push('service');\nif ((modern || postal_code) && !/^\\d{5}(?:-\\d{4})?$/.test(postal_code)) errors.push('postal_code');\nif (form_version && form_version !== '2') errors.push('form_version');\nif (addressRequired) {\n  if (street_address.length < 5 || street_address.length > 160 || /[\\u0000-\\u001f\\u007f]/.test(street_address)) errors.push('street_address');\n  if (address_line2.length > 80 || /[\\u0000-\\u001f\\u007f]/.test(address_line2)) errors.push('address_line2');\n  if (city.length < 2 || city.length > 100 || /[\\u0000-\\u001f\\u007f]/.test(city)) errors.push('city');\n  if (state !== 'CA') errors.push('state');\n  if (!/^\\d{5}(?:-\\d{4})?$/.test(postal_code) && !errors.includes('postal_code')) errors.push('postal_code');\n}\nif (email && !/^[^\\s@<>]+@[^\\s@<>]+\\.[^\\s@<>]+$/.test(email)) errors.push('email');\nif (modern && !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(requestedId)) errors.push('lead_id');\nconst timeline = text('timeline', 80) || 'Flexible';\nif (!['Flexible', 'As soon as possible', 'This week', 'Within a month'].includes(timeline)) errors.push('timeline');\nconst contact_preference = text('contact_preference', 10) || 'Call';\nif (!['Call', 'Text'].includes(contact_preference)) errors.push('contact_preference');\n// URL query strings can contain unrelated personal information. Never retain them.\nfunction safeUrl(value) {\n  const match = value.match(/^(https?:\\/\\/[^/?#\\s]+)([^?#\\s]*)/i);\n  return match && !match[1].includes('@') ? (match[1] + match[2]).slice(0, 1000) : '';\n}\nconst lead = {\n  name, phone, service, email, postal_code, timeline, contact_preference,\n  form_version, street_address, address_line2, city, state, tree_count, tree_height, discount_code,\n  property_address: street_address && city && state && postal_code\n    ? [street_address, address_line2, city + ', ' + state + ' ' + postal_code].filter(Boolean).join(', ') : '',\n  details: text('details', 3000),\n  language: text('language', 5) === 'es' ? 'es' : 'en',\n  lead_id: modern ? requestedId.toLowerCase() : 'legacy-' + $execution.id,\n  receivedAt: new Date().toISOString(), source: 'website',\n  page_url: safeUrl(text('page_url', 1200)), referrer: safeUrl(text('referrer', 1200)),\n  browser_language: text('browser_language', 40), timezone: text('timezone', 100),\n  viewport: text('viewport', 30), submitted_at: text('submitted_at', 40),\n  status: 'New', email_status: 'pending', email_sent_at: '', gmail_message_id: '', email_error: ''\n};\nfor (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) lead[key] = text(key, 200);\n// Preserve only the accepted form fields, never cookies, authorization headers or IP addresses.\nlead.raw_payload = JSON.stringify(Object.fromEntries(Object.keys(lead).filter(k => !['status','email_status','email_sent_at','gmail_message_id','email_error','receivedAt'].includes(k)).map(k => [k, lead[k]])));\nreturn [{json: { ...lead, valid: errors.length === 0, errors }}];\n"
+      }
+    },
+    {
+      "id": "b58f6f55-5991-45e5-b6d3-73c87188b026",
+      "name": "Valid Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "ab3d6b0f-6b64-409f-8988-7c984767c96e",
+      "name": "Invalid Request",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        660,
+        280
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {ok:false,error:'invalid_request',fields:$json.errors} }}",
+        "options": {
+          "responseCode": 400,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "dfa5dc9c-a958-4ca3-bbf2-e5b293a43417",
+      "name": "Find Existing Lead",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        660,
+        -100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "waEFubSJS5mzKuAs",
+          "cachedResultName": "paez-leads"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "lead_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Validate Lead').first().json.lead_id }}"
+            }
+          ]
+        },
+        "returnAll": false,
+        "limit": 1
+      },
+      "onError": "continueErrorOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "id": "dccd59ea-c31c-4d7c-8ef1-b01c794c406d",
+      "name": "Already Saved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        -100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "leftValue": "={{ Boolean($json.id) }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "007f9148-5f15-49b8-b432-9cc649dc1b89",
+      "name": "Acknowledge Existing",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1100,
+        -320
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {ok:true,lead_id:$('Validate Lead').first().json.lead_id} }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "c4602fdd-c057-48cf-b3a6-73db1e1a5df7",
+      "name": "Save Lead",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "waEFubSJS5mzKuAs",
+          "cachedResultName": "paez-leads"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "receivedAt": "={{ $('Validate Lead').first().json.receivedAt }}",
+            "name": "={{ $('Validate Lead').first().json.name }}",
+            "phone": "={{ $('Validate Lead').first().json.phone }}",
+            "email": "={{ $('Validate Lead').first().json.email }}",
+            "service": "={{ $('Validate Lead').first().json.service }}",
+            "details": "={{ $('Validate Lead').first().json.details }}",
+            "status": "={{ $('Validate Lead').first().json.status }}",
+            "lead_id": "={{ $('Validate Lead').first().json.lead_id }}",
+            "postal_code": "={{ $('Validate Lead').first().json.postal_code }}",
+            "timeline": "={{ $('Validate Lead').first().json.timeline }}",
+            "contact_preference": "={{ $('Validate Lead').first().json.contact_preference }}",
+            "language": "={{ $('Validate Lead').first().json.language }}",
+            "source": "={{ $('Validate Lead').first().json.source }}",
+            "page_url": "={{ $('Validate Lead').first().json.page_url }}",
+            "referrer": "={{ $('Validate Lead').first().json.referrer }}",
+            "utm_source": "={{ $('Validate Lead').first().json.utm_source }}",
+            "utm_medium": "={{ $('Validate Lead').first().json.utm_medium }}",
+            "utm_campaign": "={{ $('Validate Lead').first().json.utm_campaign }}",
+            "utm_content": "={{ $('Validate Lead').first().json.utm_content }}",
+            "utm_term": "={{ $('Validate Lead').first().json.utm_term }}",
+            "browser_language": "={{ $('Validate Lead').first().json.browser_language }}",
+            "timezone": "={{ $('Validate Lead').first().json.timezone }}",
+            "viewport": "={{ $('Validate Lead').first().json.viewport }}",
+            "submitted_at": "={{ $('Validate Lead').first().json.submitted_at }}",
+            "raw_payload": "={{ $('Validate Lead').first().json.raw_payload }}",
+            "email_status": "={{ $('Validate Lead').first().json.email_status }}",
+            "email_sent_at": "={{ $('Validate Lead').first().json.email_sent_at }}",
+            "gmail_message_id": "={{ $('Validate Lead').first().json.gmail_message_id }}",
+            "email_error": "={{ $('Validate Lead').first().json.email_error }}",
+            "form_version": "={{ $('Validate Lead').first().json.form_version }}",
+            "street_address": "={{ $('Validate Lead').first().json.street_address }}",
+            "address_line2": "={{ $('Validate Lead').first().json.address_line2 }}",
+            "city": "={{ $('Validate Lead').first().json.city }}",
+            "state": "={{ $('Validate Lead').first().json.state }}",
+            "property_address": "={{ $('Validate Lead').first().json.property_address }}",
+            "tree_count": "={{ $('Validate Lead').first().json.tree_count }}",
+            "tree_height": "={{ $('Validate Lead').first().json.tree_height }}",
+            "discount_code": "={{ $('Validate Lead').first().json.discount_code }}"
+          },
+          "schema": [
+            {
+              "id": "receivedAt",
+              "displayName": "receivedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "details",
+              "displayName": "details",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "lead_id",
+              "displayName": "lead_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "postal_code",
+              "displayName": "postal_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timeline",
+              "displayName": "timeline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "contact_preference",
+              "displayName": "contact_preference",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "language",
+              "displayName": "language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source",
+              "displayName": "source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "page_url",
+              "displayName": "page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "referrer",
+              "displayName": "referrer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "utm_source",
+              "displayName": "utm_source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "utm_medium",
+              "displayName": "utm_medium",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "utm_campaign",
+              "displayName": "utm_campaign",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "utm_content",
+              "displayName": "utm_content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "utm_term",
+              "displayName": "utm_term",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "browser_language",
+              "displayName": "browser_language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "timezone",
+              "displayName": "timezone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "viewport",
+              "displayName": "viewport",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "submitted_at",
+              "displayName": "submitted_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "raw_payload",
+              "displayName": "raw_payload",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_status",
+              "displayName": "email_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_sent_at",
+              "displayName": "email_sent_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "gmail_message_id",
+              "displayName": "gmail_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_error",
+              "displayName": "email_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "form_version",
+              "displayName": "form_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "street_address",
+              "displayName": "street_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "address_line2",
+              "displayName": "address_line2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "city",
+              "displayName": "city",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "state",
+              "displayName": "state",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "property_address",
+              "displayName": "property_address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tree_count",
+              "displayName": "tree_count",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tree_height",
+              "displayName": "tree_height",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "discount_code",
+              "displayName": "discount_code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "optimizeBulk": false
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "8c67bca2-b6a1-4d77-8dca-c8bc87fa3cf0",
+      "name": "Acknowledge Saved",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1320,
+        0
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {ok:true,lead_id:$('Validate Lead').first().json.lead_id} }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "a3c88a63-e9c4-4b38-b1c1-7baebe07d54c",
+      "name": "Build LC Marketing Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        0
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// LC Marketing: yellow, black and white confirmed by owner. Yellow #FECE00 sampled from supplied logo; see brand/README.txt.\nconst lead = $('Validate Lead').first().json;\nconst esc = value => String(value || 'Not provided').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',\"'\":'&#39;'}[c]));\nconst row = (label, value) => '<tr><th style=\"text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid #dedede;width:32%;color:#444444;font-size:14px\">' + esc(label) + '</th><td style=\"padding:10px 12px;border-bottom:1px solid #dedede;word-break:break-word;font-size:15px\">' + esc(value).replace(/\\n/g, '<br>') + '</td></tr>';\nconst table = rows => '<table role=\"presentation\" style=\"border-collapse:collapse;width:100%;margin:12px 0 24px\">' + rows.join('') + '</table>';\nconst emergency = lead.service.startsWith('Emergency');\nconst heading = emergency ? 'Urgent tree service request' : 'New tree service estimate';\nconst language = lead.language === 'es' ? 'Spanish / Español' : 'English';\nconst received = new Date(lead.receivedAt).toLocaleString('en-US', {timeZone:'America/Los_Angeles',dateStyle:'medium',timeStyle:'short'}) + ' Pacific';\nconst phoneDigits = lead.phone.replace(/\\D/g, '');\n// Use international format for US numbers; retain explicit international input.\nconst phoneHref = lead.phone.trim().startsWith('+') ? '+' + phoneDigits\n  : phoneDigits.length === 10 ? '+1' + phoneDigits\n  : phoneDigits.length === 11 && phoneDigits.startsWith('1') ? '+' + phoneDigits : phoneDigits;\nconst discount = lead.discount_code === 'WEB10'\n  ? 'WEB10 — 10% discount requested. Confirm eligibility with the estimate.'\n  : lead.discount_code ? lead.discount_code + ' — customer-entered code; verify before applying.' : '';\nconst discountCard = discount ? '<div style=\"margin:20px 0;padding:14px 16px;background:#fff9db;border-left:4px solid #fece00\"><strong>Discount request</strong><br>' + esc(discount) + '</div>' : '';\n// Fixed Google Maps destinations built from address fields, never a URL supplied\n// by the browser. Unit information stays visible but is omitted from the map\n// search so it does not interfere with locating the street address.\nconst hasAddress = Boolean(lead.street_address && lead.city && lead.state && lead.postal_code);\nconst propertyAddress = hasAddress ? [lead.street_address, lead.address_line2, lead.city + ', ' + lead.state + ' ' + lead.postal_code].filter(Boolean).join(', ') : '';\nconst mapQuery = hasAddress ? encodeURIComponent([lead.street_address, lead.city, lead.state + ' ' + lead.postal_code, 'USA'].join(', ')) : '';\nconst mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + mapQuery;\nconst directionsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + mapQuery + '&travelmode=driving';\nconst locationCard = '<h2 style=\"font-size:18px;margin:24px 0 10px\">Property location</h2><table role=\"presentation\" style=\"width:100%;border-collapse:separate;background:#ffffff;border:1px solid #fece00;border-radius:10px;margin-bottom:24px\"><tr><td style=\"padding:18px\">' + (hasAddress\n  ? '<p style=\"font-size:19px;line-height:1.4;font-weight:bold;margin:0 0 16px\">' + esc(propertyAddress) + '</p><a href=\"' + esc(mapUrl) + '\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display:inline-block;background:#fece00;color:#000000;text-decoration:none;border-radius:7px;padding:12px 16px;font-size:14px;font-weight:bold;margin:0 8px 8px 0\">View map</a><a href=\"' + esc(directionsUrl) + '\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display:inline-block;background:#fff;color:#000000;text-decoration:none;border:1px solid #000000;border-radius:7px;padding:11px 15px;font-size:14px;font-weight:bold;margin:0 0 8px\">Get directions</a><p style=\"font-size:12px;color:#444444;margin:4px 0 0\">Opens Google Maps using the customer-provided address. Confirm the location with the customer before visiting.</p>'\n  : '<p style=\"margin:0;color:#444444\">A full property address was not provided by this older form. Confirm the street address with the customer before visiting.</p>') + '</td></tr></table>';\nconst action = '<div style=\"margin:24px 0\"><a href=\"tel:' + phoneHref + '\" style=\"display:inline-block;padding:14px 20px;margin:0 8px 8px 0;background:#fece00;color:#000000;text-decoration:none;border-radius:8px;font-weight:bold\">Call customer</a><a href=\"sms:' + phoneHref + '\" style=\"display:inline-block;padding:13px 19px;margin:0 0 8px;border:1px solid #000000;border-radius:8px;color:#000000;text-decoration:none;font-weight:bold\">Text customer (mobile)</a><p style=\"margin:4px 0;font-size:17px;font-weight:bold\">' + esc(phoneHref) + '</p><p style=\"font-size:12px;line-height:1.5;color:#444444;margin:4px 0 0\">The text link opens a compatible messaging app; it does not send automatically. If your email app or desktop does not open it, copy the number above into your messaging app.</p></div>';\nconst html = '<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"></head><body style=\"margin:0;background:#f4f4f4;color:#000000;font-family:Arial,sans-serif;line-height:1.5\"><table role=\"presentation\" style=\"width:100%;padding:24px 10px\"><tr><td align=\"center\"><table role=\"presentation\" style=\"width:100%;max-width:640px;background:#ffffff;border:1px solid #dedede;border-radius:12px;overflow:hidden\"><tr><td style=\"background:#000000;color:#ffffff;padding:24px 28px;border-top:6px solid #fece00\"><div style=\"font-size:14px;font-weight:bold;letter-spacing:2px;color:#fece00\">LC MARKETING</div><div style=\"font-size:24px;font-weight:bold;margin-top:6px\">Paez Tree Service</div><div style=\"font-size:14px;color:#ffffff\">Website lead notification</div></td></tr><tr><td style=\"padding:24px 28px\"><div style=\"font-size:12px;text-transform:uppercase;color:#000000;font-weight:bold\">' + esc(received) + '</div><h1 style=\"font-size:25px;line-height:1.25;margin:10px 0 16px\">' + heading + '</h1><p style=\"font-size:18px;margin-bottom:4px\"><strong>' + esc(lead.name) + '</strong> requested <strong>' + esc(lead.service) + '</strong>.</p><p style=\"color:#444444;margin-top:4px\">Preferred contact: ' + esc(lead.contact_preference) + ' · Language: ' + esc(language) + '</p>' + action + discountCard + locationCard + '<h2 style=\"font-size:18px\">Job &amp; contact details</h2>' + table([row('Service',lead.service),row(lead.service === 'Stump Removal' ? 'Stump count' : 'Tree / stump count',lead.tree_count),...(lead.tree_height ? [row('Approx. tree height',lead.tree_height)] : []),row('Discount code',lead.discount_code || 'None requested'),row('ZIP code',lead.postal_code),row('Timing',lead.timeline),row('Phone',lead.phone),row('Email',lead.email),row('Details',lead.details)]) + '<h2 style=\"font-size:18px\">Where the inquiry came from</h2>' + table([row('Page',lead.page_url),row('Referrer',lead.referrer),row('Campaign source',lead.utm_source),row('Campaign medium',lead.utm_medium),row('Campaign',lead.utm_campaign),row('Ad content / keyword',[lead.utm_content,lead.utm_term].filter(Boolean).join(' / ')),row('Browser language',lead.browser_language),row('Visitor time zone',lead.timezone),row('Screen area',lead.viewport)]) + '<p style=\"font-size:13px;color:#555555\">Saved in the <strong>paez-leads</strong> log. Reference: ' + esc(lead.lead_id) + '<br>Campaign and device details are supplied by the visitor’s browser; blank fields mean they were unavailable.</p></td></tr><tr><td style=\"padding:18px 28px;background:#f4f4f4;color:#444444;font-size:12px\">Prepared by LC Marketing for Paez Tree Service.<br>Delivered to mrmushmushow@gmail.com. Paez notifications are disabled until enabled by LC Marketing.</td></tr></table></td></tr></table></body></html>';\nreturn [{json:{lead_id:lead.lead_id, email:lead.email, html, subject:(emergency?'[URGENT] ':'')+'Paez Tree Service | '+lead.service+' | '+lead.name.replace(/[\\r\\n]/g,' ')}}];\n"
+      }
+    },
+    {
+      "id": "a013027a-bd4f-4996-b72c-19e210f9bbcd",
+      "name": "Notify LC Marketing",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1760,
+        0
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "authentication": "oAuth2",
+        "sendTo": "mrmushmushow@gmail.com",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.html }}",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "LC Marketing | Paez Tree Service",
+          "replyTo": "={{ $json.email || 'paeztreeservices@gmail.com' }}"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "webhookId": "a3a056b6-776d-43b9-b142-f56dfaeac6e3",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "e8DQuZcOI4xlnOvM",
+          "name": "Google Auth"
+        }
+      }
+    },
+    {
+      "id": "52df59b9-ce32-42f2-86b1-58bde61f887d",
+      "name": "Mark Email Sent",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        -100
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "waEFubSJS5mzKuAs",
+          "cachedResultName": "paez-leads"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "lead_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Validate Lead').first().json.lead_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email_status": "sent",
+            "email_sent_at": "={{ $now.toISO() }}",
+            "gmail_message_id": "={{ $json.id }}",
+            "email_error": ""
+          },
+          "schema": [
+            {
+              "id": "email_status",
+              "displayName": "email_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_sent_at",
+              "displayName": "email_sent_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "gmail_message_id",
+              "displayName": "gmail_message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_error",
+              "displayName": "email_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "507ac76d-5ff2-4817-b983-813dbdfb1774",
+      "name": "Mark Email Failed",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        140
+      ],
+      "parameters": {
+        "resource": "row",
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "waEFubSJS5mzKuAs",
+          "cachedResultName": "paez-leads"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "lead_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Validate Lead').first().json.lead_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email_status": "failed",
+            "email_error": "={{ String($json.error?.message || $json.error || 'Email delivery failed; inspect workflow execution').slice(0,1000) }}"
+          },
+          "schema": [
+            {
+              "id": "email_status",
+              "displayName": "email_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email_error",
+              "displayName": "email_error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d24b59fa-8966-46c0-a1b4-c02036d830d5",
+      "name": "Storage Unavailable",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1100,
+        460
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {ok:false,error:'temporarily_unavailable'} }}",
+        "options": {
+          "responseCode": 503,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Quote Received": {
+      "main": [
+        [
+          {
+            "node": "Validate Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Lead": {
+      "main": [
+        [
+          {
+            "node": "Valid Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Lead?": {
+      "main": [
+        [
+          {
+            "node": "Find Existing Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Invalid Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Existing Lead": {
+      "main": [
+        [
+          {
+            "node": "Already Saved?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Storage Unavailable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Already Saved?": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Existing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Lead": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Saved",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Storage Unavailable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Acknowledge Saved": {
+      "main": [
+        [
+          {
+            "node": "Build LC Marketing Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build LC Marketing Email": {
+      "main": [
+        [
+          {
+            "node": "Notify LC Marketing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify LC Marketing": {
+      "main": [
+        [
+          {
+            "node": "Mark Email Sent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark Email Failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate",
+    "timezone": "America/Los_Angeles",
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "executionTimeout": 120
+  }
+}

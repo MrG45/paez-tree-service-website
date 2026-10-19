@@ -1,0 +1,150 @@
+---
+import type { Locale } from '../i18n';
+
+interface Props { locale: Locale }
+interface Question {
+  question: string;
+  answer: string;
+  link?: { href: string; label: string };
+}
+
+const { locale } = Astro.props;
+const copy: Record<Locale, {
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  contact: string;
+  questions: Question[];
+}> = {
+  en: {
+    eyebrow: 'Before you get started',
+    heading: 'Tree service FAQs',
+    intro: 'A little clarity before your estimate. Have a question about your own trees? Talk with the Paez team.',
+    contact: 'Call (714) 926-9413',
+    questions: [
+      {
+        question: 'Is the estimate free, and what affects the price?',
+        answer: 'Yes, estimates are free. Tree size, the work needed, access to the tree and the amount of debris can all affect the quote. Tell us about your project so we can arrange a visit and discuss the scope before you decide.',
+        link: { href: '#quote', label: 'Request a free estimate' },
+      },
+      {
+        question: 'Do you work with homeowners, HOAs and businesses?',
+        answer: 'Yes. Paez works on residential, HOA and commercial properties across Anaheim and Orange County. Services include tree trimming, tree removal, stump removal and palm tree care. Let us know your property type and the work you have in mind.',
+      },
+      {
+        question: 'Does my tree need trimming or removal?',
+        answer: 'That depends on the tree and its surroundings. Tell us what concerns you, such as overgrown branches or a damaged tree. If you are unsure which service to request, give us a call. Paez can assess the tree during the estimate visit and discuss the options with you.',
+      },
+      {
+        question: 'Will you clean up after the job?',
+        answer: 'Yes, cleanup is included with the tree work. During your estimate, discuss which branches, logs and other debris you want removed, and mention any wood you would like to keep so the scope is clear.',
+      },
+      {
+        question: 'What should I include in my estimate request?',
+        answer: 'Start with the service you need, your ZIP code and your preferred timing. Then provide your contact details and the street address and city where the work is needed. In the optional details, tell us how many trees are involved, where they are on the property and any access limits. Your phone number lets Paez follow up to arrange the estimate.',
+        link: { href: '#quote', label: 'Tell us about your trees' },
+      },
+      {
+        question: 'What if I need help with an urgent tree problem?',
+        answer: 'For storm damage, a fallen tree or another urgent job, call Paez directly to discuss the situation and current availability. Use the estimate form for work that can wait for a follow-up.',
+        link: { href: 'tel:+17149269413', label: 'Call (714) 926-9413' },
+      },
+    ],
+  },
+  es: {
+    eyebrow: 'Antes de empezar',
+    heading: 'Preguntas frecuentes',
+    intro: 'Resolvemos sus dudas antes de la cotización. ¿Tiene alguna pregunta sobre sus árboles? Hable con el equipo de Paez.',
+    contact: 'Llame al (714) 926-9413',
+    questions: [
+      {
+        question: '¿La cotización es gratis y qué influye en el precio?',
+        answer: 'Sí, las cotizaciones son gratis. El tamaño del árbol, el trabajo necesario, el acceso y la cantidad de ramas, troncos y otros residuos que haya que retirar pueden influir en el precio. Cuéntenos sobre su proyecto para agendar una visita y revisar qué incluirá el trabajo antes de que usted decida.',
+        link: { href: '#quote', label: 'Solicitar una cotización gratis' },
+      },
+      {
+        question: '¿Trabajan con propietarios, asociaciones de propietarios y negocios?',
+        answer: 'Sí. Paez trabaja en propiedades residenciales, de asociaciones de propietarios (HOA) y comerciales en Anaheim y el condado de Orange. Los servicios incluyen poda, tala, eliminación de tocones y cuidado de palmeras. Indique el tipo de propiedad y el trabajo que necesita.',
+      },
+      {
+        question: '¿Mi árbol necesita poda o hay que retirarlo?',
+        answer: 'Depende del árbol y de lo que haya a su alrededor. Cuéntenos qué le preocupa, como ramas demasiado largas o un árbol dañado. Si no sabe qué servicio solicitar, llámenos. Paez puede evaluar el árbol durante la visita para la cotización y explicarle las opciones.',
+      },
+      {
+        question: '¿Se encargan de la limpieza después del trabajo?',
+        answer: 'Sí, la limpieza está incluida en el trabajo. Durante la visita para la cotización, indique qué ramas, troncos y otros residuos desea retirar y si quiere conservar algo de madera. Así quedará claro qué incluye el servicio.',
+      },
+      {
+        question: '¿Qué debo incluir en mi solicitud de cotización?',
+        answer: 'Indique el servicio que necesita, su código postal y cuándo le gustaría que se hiciera el trabajo. Después, incluya sus datos de contacto, la calle, el número y la ciudad donde necesita el servicio. En los detalles opcionales, cuéntenos cuántos árboles son, dónde están en la propiedad y si el acceso es limitado. Su número de teléfono permite que Paez se comunique con usted para agendar la cotización.',
+        link: { href: '#quote', label: 'Cuéntenos sobre sus árboles' },
+      },
+      {
+        question: '¿Qué hago si tengo un problema urgente con un árbol?',
+        answer: 'Si hay daños por tormenta, un árbol caído u otro trabajo urgente, llame directamente a Paez para explicar la situación y consultar la disponibilidad. Use el formulario para trabajos que puedan esperar a que nos comuniquemos con usted.',
+        link: { href: 'tel:+17149269413', label: 'Llame al (714) 926-9413' },
+      },
+    ],
+  },
+};
+const content = copy[locale];
+---
+
+<section id="faq" class="pz-faq" aria-labelledby="pz-faq-title">
+  <div class="pz-faq-layout">
+    <div class="pz-faq-intro" data-promo-protect>
+      <p class="pz-faq-eyebrow">{content.eyebrow}</p>
+      <h2 id="pz-faq-title">{content.heading}</h2>
+      <p class="pz-faq-description">{content.intro}</p>
+      <a class="pz-faq-call" href="tel:+17149269413" data-promo-protect>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.8 2.1z"/></svg>
+        {content.contact}
+      </a>
+    </div>
+    <div class="pz-faq-list">
+      {content.questions.map((item) => (
+        <details class="pz-faq-item" data-promo-protect>
+          <summary>
+            <span>{item.question}</span>
+            <span class="pz-faq-toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="pz-faq-answer">
+            <p>{item.answer}</p>
+            {item.link && <a href={item.link.href}>{item.link.label}<span aria-hidden="true"> →</span></a>}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .pz-faq { background: var(--paper, #f5f2ea); border-top: 1px solid var(--line, #e2dccc); }
+  .pz-faq-layout { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.45fr); gap: 72px; max-width: 1180px; margin: 0 auto; padding: 80px 24px; }
+  .pz-faq-eyebrow { margin: 0 0 12px; color: var(--moss, var(--brand-green)); font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+  .pz-faq-intro h2 { margin: 0; color: var(--forest, var(--brand-green)); font-family: 'Barlow Condensed', sans-serif; font-size: clamp(34px, 3.5vw, 46px); font-weight: 800; line-height: 1.08; }
+  .pz-faq-description { margin: 18px 0 24px; color: var(--muted, #606060); font-size: 17px; line-height: 1.65; }
+  .pz-faq-call { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 12px 18px; border: 1px solid var(--action); border-radius: 7px; background: var(--action); color: var(--forest, var(--brand-green)); font-weight: 700; text-decoration: none; }
+  .pz-faq-call svg { flex: none; }
+  .pz-faq-call:hover { background: var(--action-hover); }
+  .pz-faq-list { min-width: 0; border-top: 1px solid #d8d8d8; }
+  .pz-faq-item { border-bottom: 1px solid #d8d8d8; }
+  .pz-faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 74px; padding: 21px 0; color: var(--forest, var(--brand-green)); font-size: 18px; font-weight: 700; line-height: 1.4; list-style: none; cursor: pointer; }
+  .pz-faq-item summary::-webkit-details-marker { display: none; }
+  .pz-faq-item summary::marker { content: ''; }
+  .pz-faq-item summary:hover { color: var(--moss, var(--brand-green)); }
+  .pz-faq-toggle { position: relative; flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%; background: #e6e6e6; }
+  .pz-faq-toggle::before, .pz-faq-toggle::after { content: ''; position: absolute; top: 13px; left: 8px; width: 12px; height: 2px; border-radius: 1px; background: currentColor; }
+  .pz-faq-toggle::after { transform: rotate(90deg); }
+  .pz-faq-item[open] .pz-faq-toggle::after { display: none; }
+  .pz-faq-answer { padding: 0 48px 22px 0; color: #4d4d4d; font-size: 16px; line-height: 1.7; }
+  .pz-faq-answer p { margin: 0; }
+  .pz-faq-answer a { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; margin-top: 9px; color: var(--moss, var(--brand-green)); font-weight: 700; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+  .pz-faq a:focus-visible, .pz-faq summary:focus-visible { outline: 3px solid var(--moss, var(--brand-green)); outline-offset: 5px; border-radius: 4px; }
+  @media (max-width: 760px) {
+    .pz-faq-layout { grid-template-columns: 1fr; gap: 30px; padding: 54px 24px; }
+    .pz-faq-description { max-width: 36rem; margin: 14px 0 20px; }
+    .pz-faq-item summary { min-height: 70px; gap: 14px; padding: 20px 0; font-size: 17px; }
+    .pz-faq-answer { padding-right: 0; }
+  }
+</style>

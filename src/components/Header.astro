@@ -1,0 +1,143 @@
+---
+import { translate, type Locale } from '../i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = (text: string) => translate(locale, text);
+const alternateLocale = locale === 'en' ? 'es' : 'en';
+const alternateLanguage = alternateLocale === 'es' ? 'es-MX' : 'en-US';
+const languageLabel = alternateLocale === 'es' ? 'Cambiar a español (México)' : 'Switch to English (US)';
+const links = [
+  ['services', 'Services'],
+  ['work', 'Our Work'],
+  ['reviews', 'Reviews'],
+  ['about', 'About'],
+];
+---
+
+<header class="pz-header" data-header-state="floating">
+  <div class="pz-header-row">
+    <a href={locale === 'es' ? '/es/' : '/'} class="pz-header-brand" aria-label={t('Paez Tree Service home')}>
+      <img src="/assets/optimized/site/logo-280.webp" width="280" height="195" decoding="async" alt="Paez Tree Service" class="pz-header-logo">
+    </a>
+    <nav class="pz-header-nav" aria-label={t('Main navigation')}>
+      {links.map(([id, label]) => <a href={`#${id}`}>{t(label)}</a>)}
+    </nav>
+    <span class="pz-header-space" aria-hidden="true"></span>
+    <a
+      href={alternateLocale === 'es' ? '/es/' : '/'}
+      class="pz-header-language"
+      data-language-link
+      data-lang={alternateLocale}
+      lang={alternateLanguage}
+      hreflang={alternateLanguage}
+      aria-label={languageLabel}
+      title={languageLabel}
+    >
+      <img src={alternateLocale === 'es' ? '/assets/flags/mx.webp' : '/assets/flags/us.svg'} width="24" height="18" class="pz-header-flag" alt="" aria-hidden="true" />
+      <span>{alternateLocale.toUpperCase()}</span>
+    </a>
+    <div class="pz-header-contact">
+      <a href="tel:7149269413" class="pz-header-call" aria-label={t('Call (714) 926-9413')}>(714) 926-9413</a>
+      <a href="#quote" class="pz-header-estimate">
+        <span>{t('Free estimate')}</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+      </a>
+    </div>
+    <button type="button" id="pzBurger" class="pz-header-menu-toggle" aria-controls="pzMobileMenu" aria-label={t('Toggle menu')} aria-expanded="false">
+      <svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <nav id="pzMobileMenu" class="pz-header-menu" aria-label={t('Mobile navigation')}>
+    {links.map(([id, label]) => <a href={`#${id}`}>{t(label)}</a>)}
+    <a href="#service-area">{t('Service Area')}</a>
+    <a href="#faq">{t('FAQs')}</a>
+  </nav>
+</header>
+<noscript>
+  <style is:inline>
+    .pz-header { position: relative !important; inset: auto !important; border-radius: 0 !important; }
+    .pz-header-row { width: 100% !important; left: auto !important; transform: none !important; margin-inline: auto !important; }
+    #pzBurger { display: none !important; }
+    .pz-hero .pz-hero-inner { padding-top: 48px !important; }
+    @media(max-width:760px) { #pzMobileMenu { display: flex !important; max-height: none !important; } }
+  </style>
+</noscript>
+
+<style>
+  .pz-header {
+    --pz-header-progress: 0;
+    --pz-header-inset: max(16px, calc((100% - 1236px) / 2));
+    --pz-header-radius: 38px;
+    --pz-header-top: 16px;
+    position: fixed;
+    top: calc(var(--pz-header-top) * (1 - var(--pz-header-progress)));
+    left: calc(var(--pz-header-inset) * (1 - var(--pz-header-progress)));
+    right: calc(var(--pz-header-inset) * (1 - var(--pz-header-progress)));
+    z-index: 90;
+    color: #f5f4ed;
+    background: var(--brand-green);
+    border-radius: calc(var(--pz-header-radius) * (1 - var(--pz-header-progress)));
+    box-shadow: 0 5px 18px #08291a24;
+  }
+  .pz-header-row { position: relative; left: 50%; transform: translateX(-50%); width: calc(100% + 2 * var(--pz-header-inset) * (1 - var(--pz-header-progress))); height: 76px; max-width: 1236px; margin: 0; padding: 8px 28px; display: flex; align-items: center; gap: 22px; }
+  .pz-header-brand { display: flex; align-items: center; flex: none; text-decoration: none; }
+  .pz-header-logo { display: block; width: 76px; height: 54px; object-fit: contain; }
+  .pz-header-nav { display: flex; align-items: center; gap: 22px; white-space: nowrap; }
+  .pz-header-nav a { display: flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; font-size: 15px; font-weight: 500; }
+  .pz-header-nav a:hover, .pz-header-menu a:hover { text-decoration: underline; text-underline-offset: 6px; }
+  .pz-header-space { flex: 1; min-width: 0; }
+  .pz-header-language { display: flex; align-items: center; justify-content: center; gap: 7px; flex: none; min-width: 50px; min-height: 44px; border-radius: 6px; color: #f0f0f0; font-size: 14px; font-weight: 600; text-decoration: none; }
+  .pz-header-language:hover { background: #ffffff12; }
+  .pz-header-flag { display: block; flex: none; width: 24px; height: 18px; object-fit: cover; border-radius: 3px; box-shadow: 0 0 0 1px #ffffff40; }
+  .pz-header-contact { display: flex; align-items: center; gap: 20px; flex: none; }
+  .pz-header-call { display: flex; align-items: center; min-height: 44px; color: inherit; font-family: 'Barlow Condensed',sans-serif; font-size: 28px; font-weight: 600; line-height: 1.15; text-decoration: none; white-space: nowrap; }
+  .pz-header-call:hover { color: var(--action); }
+  .pz-header-estimate { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 14px 22px; color: var(--brand-green); background: var(--action); border-radius: 30px; font-family: 'Barlow',sans-serif; font-size: 15px; font-weight: 600; line-height: 1.2; white-space: nowrap; text-decoration: none; transition: background .15s ease; }
+  .pz-header-estimate:hover { background: var(--action-hover); }
+  .pz-header-estimate svg { flex: none; }
+  .pz-header-menu-toggle { display: none; align-items: center; justify-content: center; flex: none; width: 44px; height: 44px; padding: 6px; border: 0; border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
+  .pz-header-menu-toggle:hover { background: #ffffff12; }
+  .pz-header #pzMobileMenu { display: none; flex-direction: column; max-height: calc(100svh - 100px); overflow-y: auto; overscroll-behavior: contain; padding: 8px 24px 16px; border-top: 1px solid #ffffff33; }
+  .pz-header-menu a { display: flex; align-items: center; min-height: 48px; padding: 12px 4px; color: inherit; font-size: 16px; font-weight: 500; text-decoration: none; }
+  @media(max-width:1100px) {
+    .pz-header-row { gap: 15px; }
+    .pz-header-logo { width: 74px; height: 52px; }
+    .pz-header-nav { gap: 16px; }
+    .pz-header-nav a { font-size: 14px; }
+    .pz-header-contact { gap: 14px; }
+    .pz-header-call { font-size: 24px; }
+    .pz-header-estimate { font-size: 14px; padding-left: 17px; padding-right: 17px; }
+  }
+  @media(min-width:761px) and (max-width:850px) {
+    .pz-header-row { gap: 9px; }
+    .pz-header-logo { width: 62px; height: 44px; }
+    .pz-header-nav { gap: 12px; }
+    .pz-header-nav a { font-size: 12px; }
+    .pz-header-contact { gap: 12px; }
+    .pz-header-call { font-size: 21px; }
+    .pz-header-estimate { font-size: 12px; padding-left: 15px; padding-right: 15px; }
+  }
+  @media(max-width:760px) {
+    .pz-header { --pz-header-inset: 12px; --pz-header-radius: 32px; --pz-header-top: 12px; }
+    .pz-header-row { left: auto; transform: none; width: auto; display: grid; grid-template-columns: auto minmax(0,1fr) 44px 44px; height: 64px; padding: 10px 14px; gap: 4px 10px; }
+    .pz-header-brand { grid-column: 1; grid-row: 1; }
+    .pz-header-logo { width: 46px; height: 44px; }
+    .pz-header-nav, .pz-header-space { display: none; }
+    .pz-header-language { grid-column: 3; grid-row: 1; min-width: 44px; gap: 4px; font-size: 12px; }
+    .pz-header-contact { display: contents; }
+    .pz-header-call { grid-column: 2; grid-row: 1; justify-self: start; font-size: 22px; font-weight: 800; color: #fff; }
+    .pz-header-estimate { display: none; }
+    .pz-header-menu-toggle { display: flex; grid-column: 4; grid-row: 1; }
+    .pz-header #pzMobileMenu { padding-left: 20px; padding-right: 20px; }
+  }
+  @media(max-width:370px) {
+    .pz-header-row { gap: 4px; padding-left: 10px; padding-right: 10px; }
+    .pz-header-logo { width: 40px; height: 36px; }
+    .pz-header-call { font-size: 20px; }
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .pz-header { top: 0; left: 0; right: 0; border-radius: 0; }
+    .pz-header-row { width: 100%; left: auto; transform: none; margin-inline: auto; }
+  }
+</style>

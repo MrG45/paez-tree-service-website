@@ -1,0 +1,23 @@
+---
+import manifest from '../../public/assets/optimized/manifest.json';
+
+interface Props {
+  src: string;
+  alt: string;
+  sizes: string;
+  class?: string;
+  style?: string;
+}
+const { src, alt, sizes, class: className, style } = Astro.props;
+const asset = manifest.images.find((image) => image.source === src);
+if (!asset) throw new Error(`No optimized image variants for ${src}`);
+const avif = asset.variants.filter((image) => image.format === 'avif');
+const webp = asset.variants.filter((image) => image.format === 'webp');
+const srcset = (images: typeof asset.variants) => images.map((image) => `${image.src} ${image.width}w`).join(', ');
+---
+<picture>
+  {avif.length > 0 && <source type="image/avif" srcset={srcset(avif)} sizes={sizes} />}
+  <img src={webp[0].src} srcset={srcset(webp)} sizes={sizes} alt={alt}
+    width={asset.width} height={asset.height} loading="lazy" decoding="async"
+    class={className} style={style} />
+</picture>

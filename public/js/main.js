@@ -1,11 +1,17 @@
 /* Paez Tree Service — theme interactions (vanilla JS, no dependencies) */
 (function () {
   'use strict';
+  var isSpanish = document.documentElement.lang.toLowerCase().indexOf('es') === 0;
+  function t(en, es) { return isSpanish ? es : en; }
 
   /* ---------- Mobile menu ---------- */
   var burger = document.getElementById('pzBurger');
   var mobileMenu = document.getElementById('pzMobileMenu');
   if (burger && mobileMenu) {
+    function closeMenu() {
+      mobileMenu.style.display = 'none';
+      burger.setAttribute('aria-expanded', 'false');
+    }
     burger.addEventListener('click', function () {
       var open = mobileMenu.style.display === 'flex';
       mobileMenu.style.display = open ? 'none' : 'flex';
@@ -13,9 +19,21 @@
     });
     mobileMenu.querySelectorAll('a').forEach(function (a) {
       a.addEventListener('click', function () {
-        mobileMenu.style.display = 'none';
-        burger.setAttribute('aria-expanded', 'false');
+        closeMenu();
       });
+    });
+    // This action stays above the mobile panel; close it before native anchor
+    // navigation measures the header and brings the estimate form into view.
+    var headerEstimate = document.querySelector('.pz-header-estimate');
+    if (headerEstimate) headerEstimate.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
+        closeMenu();
+        burger.focus();
+      }
+    });
+    window.addEventListener('resize', function () {
+      if (window.getComputedStyle(burger).display === 'none') closeMenu();
     });
   }
 
@@ -50,7 +68,6 @@
     { file: 'paez-01-climber-cutting-trunk.jpg', alt: 'Paez Tree Service climber rigging and cutting high in a tree', caption: 'Safety is our top priority &mdash; proper rigging and technique on every climb.' },
     { file: 'paez-02-crane-palm-removal-apartment.jpg', alt: 'Paez Tree Service crane and bucket truck removing a large tree', caption: 'No job too big &mdash; safe, controlled takedowns in tight spots.' },
     { file: 'paez-03-stump-grinder-operator.jpg', alt: 'Stump grinding by Paez Tree Service', caption: 'Stump grinding &mdash; taken below grade and cleaned up.' },
-    { file: 'paez-04-paez-tree-service-crew.jpg', alt: 'The Paez Tree Service crew in Anaheim, CA', caption: 'The crew behind every job &mdash; experienced, careful and on time.' },
     { file: 'paez-05-large-tree-removal-over-pool.jpg', alt: 'Paez Tree Service crew working a tree removal job site', caption: 'On the job across Anaheim and Orange County.' },
     { file: 'paez-06-trimmed-trees-modern-building.jpg', alt: 'Property cleaned and trees shaped by Paez Tree Service', caption: 'Full cleanup and haul-away &mdash; we leave your property spotless.' },
     { file: 'paez-07-bucket-truck-and-chipper-on-site.jpg', alt: 'Paez Tree Service trucks, chipper and equipment on a job', caption: 'Licensed, bonded and insured &mdash; with the equipment to back it up.' },
@@ -121,6 +138,48 @@
     { file: 'paez-72-chipper-and-brush-pile.jpg', alt: 'Brush chipping and debris haul-away by Paez Tree Service', caption: 'Full cleanup and haul-away &mdash; chipped and gone the same day.' },
     { file: 'paez-73-rigging-palm-trunk-sections.jpg', alt: 'Paez Tree Service climber rigging and cutting high in a tree', caption: 'Safety is our top priority &mdash; proper rigging and technique on every climb.' }
   ];
+  // Repeated descriptions share translations while photo filenames stay unchanged.
+  var photoTranslations = {
+    'Paez Tree Service climber rigging and cutting high in a tree': 'Trepador de Paez Tree Service colocando cuerdas y cortando en lo alto de un árbol',
+    'Paez Tree Service crane and bucket truck removing a large tree': 'Grúa y camión con canastilla de Paez Tree Service retirando un árbol grande',
+    'Stump grinding by Paez Tree Service': 'Trituración de tocones por Paez Tree Service',
+    'The Paez Tree Service crew in Anaheim, CA': 'El equipo de Paez Tree Service en Anaheim, California',
+    'Paez Tree Service crew working a tree removal job site': 'Equipo de Paez Tree Service retirando un árbol',
+    'Property cleaned and trees shaped by Paez Tree Service': 'Propiedad limpia y árboles podados por Paez Tree Service',
+    'Paez Tree Service trucks, chipper and equipment on a job': 'Camiones, trituradora y equipo de Paez Tree Service en un proyecto',
+    'Palm tree trimming by Paez Tree Service in Orange County': 'Poda de palmeras por Paez Tree Service en el condado de Orange',
+    'Brush chipping and debris haul-away by Paez Tree Service': 'Trituración de ramas y retiro de residuos por Paez Tree Service',
+    'Safety is our top priority &mdash; proper rigging and technique on every climb.': 'La seguridad es nuestra prioridad: cuerdas y técnicas adecuadas en cada ascenso.',
+    'No job too big &mdash; safe, controlled takedowns in tight spots.': 'Ningún trabajo es demasiado grande: retiramos árboles de forma segura y controlada en espacios reducidos.',
+    'Stump grinding &mdash; taken below grade and cleaned up.': 'Trituración de tocones por debajo del nivel del suelo, con limpieza incluida.',
+    'On the job across Anaheim and Orange County.': 'Trabajando en Anaheim y todo el condado de Orange.',
+    'Full cleanup and haul-away &mdash; we leave your property spotless.': 'Limpieza y retiro de residuos completos: dejamos su propiedad impecable.',
+    'Licensed, bonded and insured &mdash; with the equipment to back it up.': 'Con licencia, fianza y seguro, y con el equipo necesario para respaldarlo.',
+    'The right equipment for large trees near homes and power lines.': 'El equipo adecuado para árboles grandes cerca de casas y líneas eléctricas.',
+    'Cones out, tarps down &mdash; we protect your property while we work.': 'Conos de seguridad y lonas protectoras: cuidamos su propiedad mientras trabajamos.',
+    'Crane and bucket work with full traffic control in place.': 'Trabajos con grúa y canastilla, con control completo del tránsito.',
+    'Our own trucks, chippers and grinders on every job.': 'Usamos nuestros propios camiones y trituradoras de ramas y tocones en cada trabajo.',
+    'Letting a property shine &mdash; well-kept trees lift the whole yard.': 'Hacemos que su propiedad luzca: los árboles bien cuidados mejoran todo el jardín.',
+    'Palm trimming and skinning &mdash; clean, healthy crowns.': 'Poda y limpieza de troncos de palmeras: copas limpias y saludables.',
+    'The right crew and equipment to get the job done right the first time.': 'El personal y el equipo adecuados para hacer bien el trabajo desde el principio.',
+    'Tall palm work handled safely from the crown down.': 'Trabajos seguros en palmeras altas, desde la copa hasta la base.',
+    'A full removal handled start to finish, cleanup included.': 'Retiro completo del árbol de principio a fin, con limpieza incluida.',
+    'The finished result &mdash; clean lines, clear space, no debris.': 'El resultado final: formas definidas, espacio despejado y sin residuos.',
+    'No stump left behind &mdash; ground out and hauled away.': 'Sin dejar tocones: los trituramos y retiramos los residuos.',
+    'Full cleanup and haul-away &mdash; chipped and gone the same day.': 'Limpieza y retiro completos: trituramos y retiramos los residuos el mismo día.',
+    'Stumps ground flush so you can replant or re-sod.': 'Trituramos los tocones al ras del suelo para que pueda volver a plantar o colocar pasto.',
+    'Fan and date palms trimmed or removed to order.': 'Poda o retiro de palmeras de abanico y datileras según sus necesidades.',
+    "Certified climbers reaching what a bucket truck can't.": 'Trepadores certificados que llegan donde un camión con canastilla no puede.',
+    'A local Anaheim team you can put your trees in the hands of.': 'Un equipo local de Anaheim al que puede confiar sus árboles.',
+    'Precision cuts from up top, lowered down piece by piece.': 'Cortes precisos desde lo alto, bajando cada sección por separado.',
+    'Brush chipped on site and logs loaded out. No mess left behind.': 'Trituramos las ramas en el lugar y retiramos los troncos. Sin dejar residuos.',
+    'Everything hauled off so your property is left clean.': 'Retiramos todo para dejar su propiedad limpia.',
+    'Same crew, same standards, every single project.': 'El mismo equipo y los mismos estándares en cada proyecto.'
+  };
+  if (isSpanish) photos.forEach(function (p) {
+    p.alt = photoTranslations[p.alt];
+    p.caption = photoTranslations[p.caption];
+  });
   function fullSrc(p) { return galleryBase + p.file; }
   function thumbSrc(p) { return galleryBase + 'thumb/' + p.file; }
 
@@ -131,16 +190,39 @@
   var lbClose = document.getElementById('pzLbClose');
   var lbCount = document.querySelector('.pz-lb-count');
   var activeIdx = 0;
+  var lightboxOpen = false;
+  var lightboxTrigger = null;
+  var previousBodyOverflow = '';
+  var inertBackground = [];
 
-  if (lbCount) lbCount.textContent = photos.length + ' photos from Paez Tree Service';
+  if (lbCount) lbCount.textContent = photos.length + t(' photos from Paez Tree Service', ' fotos de Paez Tree Service');
+  document.querySelectorAll('[data-gallery-count]').forEach(function (count) { count.textContent = photos.length; });
+  if (lightbox) {
+    lightbox.setAttribute('role', 'dialog');
+    lightbox.setAttribute('aria-modal', 'true');
+    lightbox.setAttribute('aria-label', t('Paez Tree Service photo gallery', 'Galería de fotos de Paez Tree Service'));
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightbox.tabIndex = -1;
+  }
+  if (lbClose) lbClose.setAttribute('aria-label', t('Close photo gallery', 'Cerrar la galería de fotos'));
+  var lbHeading = document.getElementById('pzLbHeading');
+  if (lbHeading) lbHeading.textContent = t('Photos', 'Fotos');
+  if (lbFeed) {
+    lbFeed.tabIndex = 0;
+    lbFeed.setAttribute('role', 'region');
+    lbFeed.setAttribute('aria-label', t('Project photos; scroll to explore', 'Fotos de proyectos; desplácese para explorar'));
+  }
 
   if (gallery) {
     photos.slice(0, 6).forEach(function (p, i) {
-      var d = document.createElement('div');
+      var d = document.createElement('button');
+      d.type = 'button';
+      d.setAttribute('aria-label', t('Open photo ', 'Abrir foto ') + (i + 1) + ': ' + p.alt);
       d.className = 'pz-gitem';
-      d.style.cssText = 'border-radius:12px; overflow:hidden; position:relative; box-shadow:0 12px 30px rgba(0,0,0,.32); cursor:pointer';
+      d.style.cssText = 'padding:0; border:0; text-align:left; font:inherit; background:var(--brand-green); border-radius:12px; overflow:hidden; position:relative; box-shadow:0 12px 30px rgba(0,0,0,.32); cursor:pointer';
       d.innerHTML =
-        '<img src="' + fullSrc(p) + '" alt="' + p.alt + '" loading="lazy" style="width:100%; aspect-ratio:4/3; object-fit:cover; height:auto; display:block">' +
+        '<picture><source type="image/avif" srcset="' + tplUri + '/assets/optimized/gallery/' + p.file.replace('.jpg', '-640.avif') + '">' +
+        '<img src="' + tplUri + '/assets/optimized/gallery/' + p.file.replace('.jpg', '-640.webp') + '" alt="' + p.alt + '" loading="lazy" decoding="async" width="640" height="480" style="width:100%; aspect-ratio:4/3; object-fit:cover; height:auto; display:block"></picture>' +
         '<span class="pz-gmag" style="position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%; background:rgba(8,40,22,.55); border:1px solid rgba(255,255,255,.25); color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px">&#10530;</span>' +
         '<span style="position:absolute; left:0; right:0; bottom:0; padding:36px 16px 14px; background:linear-gradient(transparent, rgba(8,40,22,.92)); color:#fff; font-family:\'Barlow Semi Condensed\',sans-serif; font-weight:600; font-size:14px">' + p.caption + '</span>';
       d.addEventListener('click', function () { openLightbox(i); });
@@ -151,27 +233,29 @@
   function buildLightbox() {
     if (!lbThumbs || !lbFeed || lbFeed.childNodes.length) return;
     photos.forEach(function (p, i) {
-      var t = document.createElement('div');
-      t.style.cssText = 'margin-bottom:10px; border-radius:8px; overflow:hidden; cursor:pointer; border:2px solid transparent; box-shadow:0 2px 8px rgba(15,26,19,.1)';
-      t.setAttribute('data-thumb', i);
-      t.innerHTML = '<img src="' + thumbSrc(p) + '" alt="' + p.alt + '" loading="lazy" style="width:100%; height:82px; object-fit:cover; display:block">';
-      t.addEventListener('click', function () { scrollToPhoto(i); });
-      lbThumbs.appendChild(t);
+      var thumb = document.createElement('button');
+      thumb.type = 'button';
+      thumb.style.cssText = 'display:block; width:100%; padding:0; background:transparent; margin-bottom:10px; border-radius:8px; overflow:hidden; cursor:pointer; border:2px solid transparent; box-shadow:0 2px 8px rgba(15,26,19,.1)';
+      thumb.setAttribute('data-thumb', i);
+      thumb.setAttribute('aria-label', t('View photo ', 'Ver foto ') + (i + 1) + ': ' + p.alt);
+      thumb.innerHTML = '<img src="' + thumbSrc(p) + '" alt="" loading="lazy" style="width:100%; height:82px; object-fit:cover; display:block">';
+      thumb.addEventListener('click', function () { scrollToPhoto(i); });
+      lbThumbs.appendChild(thumb);
 
       var card = document.createElement('div');
       card.setAttribute('data-photo', i);
       card.style.cssText = 'max-width:660px; margin:0 auto 34px';
       card.innerHTML =
         '<div style="display:flex; align-items:center; gap:12px; margin-bottom:12px">' +
-          '<span style="width:46px; height:46px; border-radius:50%; background:#124a28; color:#23a657; display:flex; align-items:center; justify-content:center; font-family:\'Barlow Condensed\',sans-serif; font-weight:800; font-size:17px; flex:none">PT</span>' +
+          '<span style="width:46px; height:46px; border-radius:50%; background:var(--brand-green); color:#fff; display:flex; align-items:center; justify-content:center; font-family:\'Barlow Condensed\',sans-serif; font-weight:800; font-size:17px; flex:none">PT</span>' +
           '<div style="flex:1; min-width:0">' +
-            '<div style="font-weight:700; color:#0a3a1f; font-size:15px">Paez Tree Service</div>' +
-            '<div style="display:flex; align-items:center; gap:7px; font-size:12.5px; color:#5f6b60">Anaheim, CA <img src="' + tplUri + '/assets/yelp-logo.png" alt="Yelp" style="height:12px; width:auto; display:block"></div>' +
+            '<div style="font-weight:700; color:var(--brand-green); font-size:15px">Paez Tree Service</div>' +
+            '<div style="display:flex; align-items:center; gap:7px; font-size:12.5px; color:#606060">Anaheim, CA <img src="' + tplUri + '/assets/optimized/yelp-logo-192.webp" alt="Yelp" style="height:12px; width:auto; display:block"></div>' +
           '</div>' +
         '</div>' +
         '<img src="' + fullSrc(p) + '" alt="' + p.alt + '" loading="lazy" style="width:100%; border-radius:10px; display:block; box-shadow:0 12px 30px rgba(15,26,19,.14)">' +
         '<div style="color:#d32323; font-size:14px; letter-spacing:1px; margin-top:12px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
-        '<p style="color:#1b2620; font-size:15px; line-height:1.6; margin:7px 0 0">' + p.caption + '</p>';
+        '<p style="color:#242424; font-size:15px; line-height:1.6; margin:7px 0 0">' + p.caption + '</p>';
       lbFeed.appendChild(card);
     });
     lbFeed.addEventListener('scroll', onFeedScroll, { passive: true });
@@ -181,7 +265,8 @@
     activeIdx = i;
     if (!lbThumbs) return;
     lbThumbs.querySelectorAll('[data-thumb]').forEach(function (t, j) {
-      t.style.borderColor = j === i ? '#0a3a1f' : 'transparent';
+      t.style.borderColor = j === i ? 'var(--brand-green)' : 'transparent';
+      t.setAttribute('aria-current', String(j === i));
     });
   }
 
@@ -208,23 +293,64 @@
   }
 
   function openLightbox(i) {
-    if (!lightbox) return;
+    if (!lightbox || lightboxOpen) return;
     buildLightbox();
+    lightboxTrigger = document.activeElement;
+    previousBodyOverflow = document.body.style.overflow;
+    lightboxOpen = true;
     lightbox.style.display = 'flex';
+    lightbox.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    requestAnimationFrame(function () { scrollToPhoto(i); });
+    // Disable every sibling branch without making the dialog's ancestors inert.
+    var branch = lightbox;
+    while (branch && branch !== document.body) {
+      Array.prototype.forEach.call(branch.parentElement.children, function (sibling) {
+        if (sibling !== branch && !sibling.inert) {
+          inertBackground.push(sibling);
+          sibling.inert = true;
+        }
+      });
+      branch = branch.parentElement;
+    }
+    (lbClose || lightbox).focus({ preventScroll: true });
+    requestAnimationFrame(function () { if (lightboxOpen) scrollToPhoto(i); });
   }
   function closeLightbox() {
-    if (!lightbox) return;
+    if (!lightbox || !lightboxOpen) return;
+    lightboxOpen = false;
     lightbox.style.display = 'none';
-    document.body.style.overflow = '';
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = previousBodyOverflow;
+    inertBackground.forEach(function (el) { el.inert = false; });
+    inertBackground = [];
+    if (lightboxTrigger && lightboxTrigger.isConnected) lightboxTrigger.focus({ preventScroll: true });
   }
-  var viewAll = document.getElementById('pzViewGallery');
-  if (viewAll) viewAll.addEventListener('click', function () { openLightbox(0); });
+  document.querySelectorAll('[data-open-gallery]').forEach(function (button) {
+    button.addEventListener('click', function () { openLightbox(0); });
+  });
   if (lbClose) lbClose.addEventListener('click', closeLightbox);
   if (lightbox) {
     lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+    document.addEventListener('keydown', function (e) {
+      if (!lightboxOpen) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeLightbox();
+      }
+      if (e.key !== 'Tab') return;
+      var focusable = Array.prototype.filter.call(lightbox.querySelectorAll('a[href], button, input, select, textarea, [tabindex]'), function (el) {
+        return !el.disabled && el.tabIndex >= 0 && el.getClientRects().length > 0;
+      });
+      var first = focusable[0] || lightbox;
+      var last = focusable[focusable.length - 1] || lightbox;
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === lightbox)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (document.activeElement === last || document.activeElement === lightbox)) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
   }
 
 
@@ -233,37 +359,37 @@
      matching -before / -after photo shot from the same spot. */
   var baBase = tplUri + '/assets/before-after/';
   var baPairs = [
-    { title: 'Backyard large tree removal', blurb: 'A mature tree overhanging the house and carport, taken down and hauled out.', before: 'ba-02-backyard-large-tree-removal-before.jpg', after: 'ba-02-backyard-large-tree-removal-after.jpg' },
-    { title: 'Front yard pine removal', blurb: 'A full-height pine removed from a tight front yard, lawn left intact.', before: 'ba-03-front-yard-pine-removal-before.jpg', after: 'ba-03-front-yard-pine-removal-after.jpg' },
-    { title: 'Side yard cypress removal', blurb: 'An overgrown cypress row along the wall cleared back to a clean walkway.', before: 'ba-04-side-yard-cypress-removal-before.jpg', after: 'ba-04-side-yard-cypress-removal-after.jpg' },
-    { title: 'Front yard tree removal', blurb: 'A dead tree taken out of the front yard, hedge and lawn left untouched.', before: 'ba-05-front-yard-tree-removal-before.jpg', after: 'ba-05-front-yard-tree-removal-after.jpg' },
-    { title: 'Front yard landscape clearing', blurb: 'Overgrown palms and shrubs cleared off the driveway and frontage.', before: 'ba-06-front-yard-landscape-clearing-before.jpg', after: 'ba-06-front-yard-landscape-clearing-after.jpg' },
-    { title: 'Backyard clearing', blurb: 'A crowded backyard opened right up &mdash; seen from above, before and after.', before: 'ba-07-backyard-clearing-aerial-before.jpg', after: 'ba-07-backyard-clearing-aerial-after.jpg' },
-    { title: 'Front yard olive tree removal', blurb: 'An olive tree removed cleanly from the front planter, no damage to the yard.', before: 'ba-08-front-yard-olive-tree-removal-before.jpg', after: 'ba-08-front-yard-olive-tree-removal-after.jpg' },
-    { title: 'Garage-side cypress removal', blurb: 'Tall cypress crowding the garage removed, with full traffic control on the street.', before: 'ba-09-garage-side-cypress-removal-before.jpg', after: 'ba-09-garage-side-cypress-removal-after.jpg' },
-    { title: 'Backyard tree trimming', blurb: 'A heavy backyard canopy thinned and shaped &mdash; light back in the yard.', before: 'ba-10-backyard-tree-trimming-before.jpg', after: 'ba-10-backyard-tree-trimming-after.jpg' },
-    { title: 'Poolside tree removal', blurb: 'A large tree dropping into the pool removed, decking left clean.', before: 'ba-11-poolside-tree-removal-before.jpg', after: 'ba-11-poolside-tree-removal-after.jpg' },
-    { title: 'Hillside backyard removal', blurb: 'Hillside growth cut back to reopen the slope behind the house.', before: 'ba-13-hillside-backyard-removal-before.jpg', after: 'ba-13-hillside-backyard-removal-after.jpg' }
+    { title: t('Backyard large tree removal', 'Retiro de un árbol grande en el patio trasero'), blurb: t('A mature tree overhanging the house and carport, taken down and hauled out.', 'Cortamos y retiramos un árbol maduro que se extendía sobre la casa y la cochera.'), before: 'ba-02-backyard-large-tree-removal-before.jpg', after: 'ba-02-backyard-large-tree-removal-after.jpg' },
+    { title: t('Front yard pine removal', 'Retiro de un pino en el jardín delantero'), blurb: t('A full-height pine removed from a tight front yard, lawn left intact.', 'Retiramos un pino alto de un jardín delantero estrecho, dejando el pasto intacto.'), before: 'ba-03-front-yard-pine-removal-before.jpg', after: 'ba-03-front-yard-pine-removal-after.jpg' },
+    { title: t('Side yard cypress removal', 'Retiro de cipreses en el patio lateral'), blurb: t('An overgrown cypress row along the wall cleared back to a clean walkway.', 'Retiramos una hilera de cipreses crecidos junto a la barda para despejar el camino.'), before: 'ba-04-side-yard-cypress-removal-before.jpg', after: 'ba-04-side-yard-cypress-removal-after.jpg' },
+    { title: t('Front yard tree removal', 'Retiro de un árbol en el jardín delantero'), blurb: t('A dead tree taken out of the front yard, hedge and lawn left untouched.', 'Retiramos un árbol muerto del jardín delantero sin afectar el seto ni el pasto.'), before: 'ba-05-front-yard-tree-removal-before.jpg', after: 'ba-05-front-yard-tree-removal-after.jpg' },
+    { title: t('Front yard landscape clearing', 'Despeje del jardín delantero'), blurb: t('Overgrown palms and shrubs cleared off the driveway and frontage.', 'Retiramos palmeras y arbustos crecidos de la entrada y el frente de la propiedad.'), before: 'ba-06-front-yard-landscape-clearing-before.jpg', after: 'ba-06-front-yard-landscape-clearing-after.jpg' },
+    { title: t('Backyard clearing', 'Despeje del patio trasero'), blurb: t('A crowded backyard opened right up &mdash; seen from above, before and after.', 'Despejamos un patio trasero saturado: vista aérea del antes y el después.'), before: 'ba-07-backyard-clearing-aerial-before.jpg', after: 'ba-07-backyard-clearing-aerial-after.jpg' },
+    { title: t('Front yard olive tree removal', 'Retiro de un olivo en el jardín delantero'), blurb: t('An olive tree removed cleanly from the front planter, no damage to the yard.', 'Retiramos un olivo de la jardinera delantera sin dañar el jardín.'), before: 'ba-08-front-yard-olive-tree-removal-before.jpg', after: 'ba-08-front-yard-olive-tree-removal-after.jpg' },
+    { title: t('Garage-side cypress removal', 'Retiro de cipreses junto a la cochera'), blurb: t('Tall cypress crowding the garage removed, with full traffic control on the street.', 'Retiramos los cipreses altos que invadían el espacio de la cochera, con control completo del tránsito en la calle.'), before: 'ba-09-garage-side-cypress-removal-before.jpg', after: 'ba-09-garage-side-cypress-removal-after.jpg' },
+    { title: t('Backyard tree trimming', 'Poda de árboles en el patio trasero'), blurb: t('A heavy backyard canopy thinned and shaped &mdash; light back in the yard.', 'Aclaramos y dimos forma a una copa densa para devolver la luz al patio.'), before: 'ba-10-backyard-tree-trimming-before.jpg', after: 'ba-10-backyard-tree-trimming-after.jpg' },
+    { title: t('Poolside tree removal', 'Retiro de un árbol junto a la alberca'), blurb: t('A large tree dropping into the pool removed, decking left clean.', 'Retiramos un árbol grande que dejaba caer residuos en la alberca y dejamos limpia el área de alrededor.'), before: 'ba-11-poolside-tree-removal-before.jpg', after: 'ba-11-poolside-tree-removal-after.jpg' },
+    { title: t('Hillside backyard removal', 'Despeje de la ladera del patio trasero'), blurb: t('Hillside growth cut back to reopen the slope behind the house.', 'Recortamos la vegetación para despejar la ladera detrás de la casa.'), before: 'ba-13-hillside-backyard-removal-before.jpg', after: 'ba-13-hillside-backyard-removal-after.jpg' }
   ];
   var baGrid = document.getElementById('pzBaGrid');
 
   function baCard(p) {
-    return '<div class="pz-bacard" style="border-radius:12px; overflow:hidden; background:#0b3a20; border:1px solid rgba(255,255,255,.08); box-shadow:0 14px 34px rgba(0,0,0,.34)">' +
+    return '<div class="pz-bacard" style="border-radius:12px; overflow:hidden; background:var(--brand-green); border:1px solid rgba(255,255,255,.08); box-shadow:0 14px 34px rgba(0,0,0,.34)">' +
       '<div data-cmp style="position:relative; user-select:none">' +
-        '<img src="' + baBase + p.after + '" alt="After &mdash; ' + p.title + '" loading="lazy" style="width:100%; aspect-ratio:4/5; object-fit:cover; display:block">' +
+        '<img src="' + baBase + p.after + '" alt="' + t('After', 'Después') + ' &mdash; ' + p.title + '" loading="lazy" style="width:100%; aspect-ratio:4/5; object-fit:cover; display:block">' +
         '<div data-cmp-clip style="position:absolute; inset:0; clip-path:inset(0 50% 0 0); overflow:hidden">' +
-          '<img src="' + baBase + p.before + '" alt="Before &mdash; ' + p.title + '" loading="lazy" style="width:100%; aspect-ratio:4/5; object-fit:cover; display:block">' +
+          '<img src="' + baBase + p.before + '" alt="' + t('Before', 'Antes') + ' &mdash; ' + p.title + '" loading="lazy" style="width:100%; aspect-ratio:4/5; object-fit:cover; display:block">' +
         '</div>' +
-        '<div style="position:absolute; top:12px; left:12px; background:rgba(8,40,22,.82); color:#fff; padding:5px 11px; border-radius:30px; font-family:\'Barlow Semi Condensed\',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:11.5px; pointer-events:none">Before</div>' +
-        '<div style="position:absolute; top:12px; right:12px; background:rgba(232,161,58,.95); color:#241303; padding:5px 11px; border-radius:30px; font-family:\'Barlow Semi Condensed\',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:11.5px; pointer-events:none">After</div>' +
+        '<div style="position:absolute; top:12px; left:12px; background:rgba(8,40,22,.82); color:#fff; padding:5px 11px; border-radius:30px; font-family:\'Barlow Semi Condensed\',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:11.5px; pointer-events:none">' + t('Before', 'Antes') + '</div>' +
+        '<div style="position:absolute; top:12px; right:12px; background:var(--action); color:#241303; padding:5px 11px; border-radius:30px; font-family:\'Barlow Semi Condensed\',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:.08em; font-size:11.5px; pointer-events:none">' + t('After', 'Después') + '</div>' +
         '<div data-cmp-handle style="position:absolute; top:0; bottom:0; left:50%; width:3px; background:#fff; box-shadow:0 0 12px rgba(0,0,0,.5); pointer-events:none; transform:translateX(-1.5px)">' +
-          '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:36px; height:36px; border-radius:50%; background:#fff; box-shadow:0 4px 14px rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; color:#0a3a1f; font-weight:700; font-size:14px">&#8646;</div>' +
+          '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:36px; height:36px; border-radius:50%; background:#fff; box-shadow:0 4px 14px rgba(0,0,0,.4); display:flex; align-items:center; justify-content:center; color:var(--brand-green); font-weight:700; font-size:14px">&#8646;</div>' +
         '</div>' +
-        '<input type="range" data-cmp-range min="0" max="100" value="50" aria-label="Compare before and after: ' + p.title + '" style="position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:ew-resize; margin:0; touch-action:pan-y">' +
+        '<input type="range" data-cmp-range min="0" max="100" value="50" aria-label="' + t('Compare before and after: ', 'Comparar antes y después: ') + p.title + '" style="position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:ew-resize; margin:0; touch-action:pan-y">' +
       '</div>' +
       '<div style="padding:15px 17px 17px">' +
         '<div style="font-family:\'Barlow Condensed\',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; color:#fff; line-height:1.15">' + p.title + '</div>' +
-        '<p style="color:#aebaa6; font-size:14px; line-height:1.55; margin:6px 0 0">' + p.blurb + '</p>' +
+        '<p style="color:#d6d6d6; font-size:14px; line-height:1.55; margin:6px 0 0">' + p.blurb + '</p>' +
       '</div>' +
     '</div>';
   }
@@ -274,36 +400,39 @@
     initComparesIn(baGrid);
   }
 
-  /* ---------- Gallery tabs ---------- */
-  var tabBtns = document.querySelectorAll('.pz-tab');
-  var tabPanels = { work: document.getElementById('pzPanelWork'), ba: document.getElementById('pzPanelBa') };
-
-  function selectTab(name) {
-    if (name === 'ba') buildBaGrid();
-    tabBtns.forEach(function (t) {
-      var on = t.getAttribute('data-tab') === name;
-      t.setAttribute('aria-selected', String(on));
-      t.classList.toggle('is-on', on);
-      t.tabIndex = on ? 0 : -1;
+  /* Recent Work returns from comparisons to the photo grid, then opens the
+     full gallery when that grid is already visible. */
+  var workToggle = document.getElementById('pzTabWork');
+  var compareToggle = document.getElementById('pzTabBa');
+  var workPanel = document.getElementById('pzPanelWork');
+  var comparePanel = document.getElementById('pzPanelBa');
+  if (workToggle && compareToggle && workPanel && comparePanel) {
+    function showComparisons(show) {
+      if (show) buildBaGrid();
+      compareToggle.setAttribute('aria-expanded', String(show));
+      compareToggle.classList.toggle('is-on', show);
+      workPanel.hidden = show;
+      comparePanel.hidden = !show;
+      if (show) {
+        workToggle.setAttribute('aria-controls', 'pzPanelWork');
+        workToggle.setAttribute('aria-expanded', 'false');
+        workToggle.removeAttribute('aria-haspopup');
+      } else {
+        workToggle.setAttribute('aria-controls', 'pzLightbox');
+        workToggle.setAttribute('aria-haspopup', 'dialog');
+        workToggle.removeAttribute('aria-expanded');
+      }
+    }
+    workToggle.addEventListener('click', function () {
+      if (!comparePanel.hidden) {
+        showComparisons(false);
+        return;
+      }
+      openLightbox(0);
     });
-    Object.keys(tabPanels).forEach(function (k) {
-      if (tabPanels[k]) tabPanels[k].hidden = (k !== name);
+    compareToggle.addEventListener('click', function () {
+      showComparisons(comparePanel.hidden);
     });
-  }
-
-  if (tabBtns.length) {
-    tabBtns.forEach(function (t) {
-      t.addEventListener('click', function () { selectTab(t.getAttribute('data-tab')); });
-      t.addEventListener('keydown', function (e) {
-        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-        e.preventDefault();
-        var list = Array.prototype.slice.call(tabBtns);
-        var nxt = list[(list.indexOf(t) + (e.key === 'ArrowRight' ? 1 : list.length - 1)) % list.length];
-        nxt.focus();
-        selectTab(nxt.getAttribute('data-tab'));
-      });
-    });
-    selectTab('work');
   }
 
   /* ---------- Reviews carousel ---------- */
@@ -319,6 +448,22 @@
     { name: 'M.C. S.', city: 'Orange County, CA', initials: 'MS', quote: '"I had 10 cypress trees topped and it was accomplished safely, efficiently and to my satisfaction. The guys worked well together and were friendly and helpful. The yard was raked and left cleaner than I had it."' },
     { name: 'David M.', city: 'Huntington Beach, CA', initials: 'DM', quote: '"Everardo and his team were fantastic. They removed 2 large palms with a crew and a crane, and left the backyard very clean with no debris or damage. I will definitely use them again!"' }
   ];
+  var reviewTranslations = {
+    'Scott C.': '«Su equipo hizo muy bien su trabajo y cortó 5 eucaliptos de cincuenta pies en una pendiente de manera segura y rápida. Everardo es el jefe, pero también corta: sabe lo que hace. El precio es razonable. Los volveré a contratar.»',
+    'Blanca N.': '«Retiraron dos árboles junto a una barda de bloques en solo un par de horas; se llevaron los residuos y limpiaron el área. Me dieron una excelente cotización en persona y me explicaron lo de su seguro y licencia. Respetuosos, seguros y rápidos. Los recomiendo mucho.»',
+    'Jonathan C.': '«Tenía un pino de 30 años inclinado hacia la casa. Llamé a Paez para cortar todo el árbol y retirar el tocón. Gracias a Paez y a su equipo de 4 personas: hicieron un trabajo maravilloso y limpiaron la entrada y la calle, incluyendo el área de mi vecino.»',
+    'Jennifer A.': '«Llegaron a tiempo y mantuvieron la comunicación durante todo el trabajo. ¡Trabajaron rápido e hicieron un trabajo excelente! Les dimos propina y Everardo llamó para devolver lo que pensó que habíamos pagado de más. ¡Qué persona tan honesta! Los recomiendo mucho.»',
+    'Steven F.': '«Un eucalipto grande cayó en mi jardín y se encargaron de él ese mismo día. Un trabajo honesto, rápido, profesional y limpio. Esta es la segunda vez que trabajo con ellos y recomiendo mucho sus servicios.»',
+    'Mary Rose D.': '«La experiencia con Everardo fue excelente: una cotización muy razonable y un trabajo muy bien hecho. Aprovecharon bien el tiempo y la calidad del trabajo fue magnífica. Los volveré a contratar para mi próximo proyecto.»',
+    'Rosana T.': '«Retiraron 5 cipreses viejos y 2 tocones grandes. Muy amables e hicieron el trabajo rápido. Limpiaron todo y se llevaron los residuos. Buena comunicación y se adaptaron a mi horario. Los volveré a contratar.»',
+    'Andrew M.': '«¡Everardo y su equipo fueron excelentes! Lo contrataré otra vez para otro árbol. Llegaron a tiempo, mantuvieron la comunicación, trabajaron rápido e hicieron un trabajo excelente. Los recomiendo mucho.»',
+    'M.C. S.': '«Les encargué reducir la altura de 10 cipreses y lo hicieron de forma segura, eficiente y a mi entera satisfacción. Los muchachos trabajaron bien en equipo y fueron amables y serviciales. Rastrillaron el jardín y lo dejaron más limpio de lo que estaba.»',
+    'David M.': '«Everardo y su equipo fueron fantásticos. Retiraron 2 palmeras grandes con un equipo de trabajo y una grúa, y dejaron el patio trasero muy limpio, sin residuos ni daños. ¡Sin duda los volveré a contratar!»'
+  };
+  if (isSpanish) reviews.forEach(function (r) {
+    r.quote = reviewTranslations[r.name];
+    if (r.city === 'Orange County, CA') r.city = 'Condado de Orange, CA';
+  });
   var yelpUrl = 'https://www.yelp.com/biz/paez-tree-service-anaheim';
   var track = document.getElementById('pzCaroTrack');
   var dotsWrap = document.getElementById('pzCaroDots');
@@ -338,11 +483,12 @@
       item.innerHTML =
         '<a href="' + yelpUrl + '" target="_blank" rel="noopener" class="pz-rcard" style="background:#fff; border-radius:8px; padding:30px 28px; box-shadow:0 8px 30px rgba(15,26,19,.08); display:flex; flex-direction:column; width:100%; text-decoration:none; color:inherit">' +
           '<div style="color:#d32323; font-size:17px; letter-spacing:2px; margin-bottom:14px">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
-          '<p style="color:#1b2620; font-size:15.5px; line-height:1.65; margin:0 0 20px; flex:1">' + r.quote + '</p>' +
-          '<div style="display:flex; align-items:center; gap:12px; border-top:1px solid #e2dccc; padding-top:16px">' +
-            '<span style="width:44px; height:44px; border-radius:50%; background:#124a28; color:#23a657; display:flex; align-items:center; justify-content:center; font-family:\'Barlow Condensed\',sans-serif; font-weight:800; font-size:19px; flex:none">' + r.initials + '</span>' +
-            '<div style="flex:1; min-width:0"><div style="font-weight:700; color:#0a3a1f">' + r.name + '</div><div style="display:flex; align-items:center; gap:7px; font-size:13px; color:#5f6b60; margin-top:2px">' + r.city + ' <img src="' + tplUri + '/assets/yelp-logo.png" alt="Yelp" style="height:15px; width:auto; display:block"></div></div>' +
-            '<span style="flex:none; align-self:center; font-size:12px; font-weight:700; color:#d32323; text-transform:uppercase; letter-spacing:.03em; white-space:nowrap">Read on Yelp &rarr;</span>' +
+          '<p style="color:#242424; font-size:15.5px; line-height:1.65; margin:0 0 20px; flex:1">' + r.quote + '</p>' +
+          (isSpanish ? '<small style="color:#606060; display:block; margin:-8px 0 16px; font-size:12px">Traducido del inglés</small>' : '') +
+          '<div class="pz-review-footer">' +
+            '<span class="pz-review-avatar" aria-hidden="true">' + r.initials + '</span>' +
+            '<div class="pz-review-author"><div class="pz-review-name">' + r.name + '</div><div class="pz-review-city">' + r.city + '</div></div>' +
+            '<div class="pz-review-source"><img src="' + tplUri + '/assets/optimized/yelp-logo-192.webp" alt="Yelp"><span class="pz-review-link">' + t('Read on Yelp', 'Leer en Yelp') + ' &rarr;</span></div>' +
           '</div>' +
         '</a>';
       track.appendChild(item);
@@ -358,7 +504,7 @@
       (function (i) {
         var b = document.createElement('button');
         b.type = 'button';
-        b.setAttribute('aria-label', 'Go to review ' + (i + 1));
+        b.setAttribute('aria-label', t('Go to review ', 'Ir a la reseña ') + (i + 1));
         b.style.cssText = 'height:9px; border-radius:20px; border:none; padding:0; cursor:pointer; transition:width .3s ease, background .3s ease';
         b.addEventListener('click', function () { go(i); });
         dotsWrap.appendChild(b);
